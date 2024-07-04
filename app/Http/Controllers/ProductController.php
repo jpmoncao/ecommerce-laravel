@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Utils\ValidatorRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::findAll();
+
+        return response()->json([
+            'message' => 'Products listeds successfully!',
+            'data' => $products,
+        ], 201);
     }
 
     /**
@@ -28,15 +34,42 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = new ValidatorRequest($request, [
+            'name' => 'required|string|max:50',
+            'description' => 'nullable|string|max:255',
+        ]);
+
+        $error = $validate->handleErrors();
+        if ($error) {
+            return $error;
+        }
+
+        $product = Product::create($request->all());
+
+        return response()->json([
+            'message' => 'Product created successfully!',
+            'data' => $product,
+        ], 201);
     }
+
 
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(int $id)
     {
-        //
+        $product = Product::with('variants')->find($id);
+
+        if (!$product) {
+            return response()->json([
+                'message' => 'Product not found!',
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Product listed successfully!',
+            'data' => $product,
+        ], 200);
     }
 
     /**
