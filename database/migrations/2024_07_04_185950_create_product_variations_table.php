@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->string('id_product_variation', 36)->primary();
             $table->string('variation');
             $table->float('amount', 2);
-            $table->integer('product_id');
+            $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id_product')->on('products');
             $table->timestamps();
         });
