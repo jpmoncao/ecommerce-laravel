@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;  // Adicione esta importação para gerar UUIDs
+use Illuminate\Support\Str;  
 
 class ProductVariations extends Model
 {

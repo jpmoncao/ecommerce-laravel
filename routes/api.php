@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductVariationsController;
+use App\Http\Controllers\ProductStockEntriesController;
+use App\Http\Controllers\ProductStocksController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,8 +18,8 @@ use Illuminate\Support\Facades\Route;
 // Recursos
 Route::resource('/products', ProductController::class);
 Route::resource('/variations', ProductVariationsController::class);
-// Route::resource('/stocks', ProductStocks::class);
-// Route::resource('/entries/stock', ProductStockEntries::class);
+Route::resource('/stocks', ProductStocksController::class);
+Route::resource('/entries/stock', ProductStockEntriesController::class);
 
 // Relacionamentos
 Route::get('/products/{product_id}/variations', [ProductController::class, 'variations']);
