@@ -16,7 +16,7 @@ class ProductVariations extends Model
 
     public $fillable = [
         'id_product_variation',
-        'variant',
+        'variation',
         'amount',
         'product_id',
     ];

@@ -58,7 +58,7 @@ class ProductController extends Controller
      */
     public function show(int $id)
     {
-        $product = Product::with('variants')->find($id);
+        $product = Product::find($id);
 
         if (!$product) {
             return response()->json([
@@ -95,4 +95,21 @@ class ProductController extends Controller
     {
         //
     }
+
+    public function variations(int $product_id)
+    {
+        $product = Product::with('variants')->find($product_id);
+
+        if (!$product) {
+            return response()->json([
+                'message' => 'Product not found!',
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Product with variations listed successfully!',
+            'data' => $product,
+        ], 200);
+    }
+
 }
