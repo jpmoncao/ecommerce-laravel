@@ -18,9 +18,10 @@ use Illuminate\Support\Facades\Route;
 // Recursos
 Route::resource('/products', ProductController::class);
 Route::resource('/variations', ProductVariationsController::class);
-Route::resource('/stocks', ProductStocksController::class);
 Route::resource('/entries/stock', ProductStockEntriesController::class);
 
 // Relacionamentos
 Route::get('/products/{product_id}/variations', [ProductController::class, 'variations']);
 Route::get('/variations/{variation_id}/product', [ProductVariationsController::class, 'product']);
+Route::get('/variations/{variation_id}/stock', [ProductVariationsController::class, 'stock']);
+Route::get('/variations/{variation_id}/entries/stock', [ProductVariationsController::class, 'stockEntries']);

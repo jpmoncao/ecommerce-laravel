@@ -13,7 +13,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::findAll();
+        $products = Product::get();
 
         return response()->json([
             'message' => 'Products listeds successfully!',

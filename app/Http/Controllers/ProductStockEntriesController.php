@@ -39,7 +39,7 @@ class ProductStockEntriesController extends Controller
         $validate = new ValidatorRequest($request, [
             'product_variation_id' => 'required|string|max:36',
             'quantity' => 'required|numeric',
-            'observation' => 'nullable|string|max:255', // Adicionado nullable para o campo observation
+            'observation' => 'nullable|string|max:255',
         ]);
 
         $error = $validate->handleErrors();
@@ -75,9 +75,14 @@ class ProductStockEntriesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductStockEntries $productStockEntries)
+    public function show(string $product_stock_entry_id)
     {
-        //
+        $product_stock_entry = ProductStockEntries::find($product_stock_entry_id);
+
+        return response()->json([
+            'message' => 'Product stock entry listed successfully!',
+            'data' => $product_stock_entry,
+        ], 200);
     }
 
     /**

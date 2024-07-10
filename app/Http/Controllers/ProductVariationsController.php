@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductVariations;
+use App\Models\ProductStocks;
 use Illuminate\Http\Request;
 use App\Http\Utils\ValidatorRequest;
 
@@ -44,6 +45,7 @@ class ProductVariationsController extends Controller
 
         // Criar a variação do produto
         $product_variation = ProductVariations::create($request->all());
+        ProductStocks::create(["id_stock" => $product_variation->id_product_variation]);
 
         return response()->json([
             'message' => 'Product variation created successfully!',
@@ -85,7 +87,6 @@ class ProductVariationsController extends Controller
             ], 404);
         }
 
-        // Validação dos campos de entrada
         $validate = new ValidatorRequest($request, [
             'variant' => 'sometimes|required|string|max:250',
             'amount' => 'sometimes|required|numeric',
@@ -125,7 +126,6 @@ class ProductVariationsController extends Controller
         ], 200);
     }
 
-
     public function product(string $variation)
     {
         $product_variation = ProductVariations::find($variation);
@@ -142,6 +142,46 @@ class ProductVariationsController extends Controller
         return response()->json([
             'message' => 'Product owner of variation listed successfully!',
             'data' => $product,
+        ], 200);
+
+
+    }
+    public function stock(string $variation)
+    {
+        $product_variation = ProductVariations::find($variation);
+
+        if (!$product_variation) {
+            return response()->json([
+                'message' => 'Product variation not found!',
+            ], 404);
+        }
+
+        $product_variation->stock();
+        $stock = $product_variation->stock;
+
+        return response()->json([
+            'message' => 'Stock of variation listed successfully!',
+            'data' => $stock,
+        ], 200);
+
+    }
+
+    public function stockEntries(string $variation)
+    {
+        $product_variation = ProductVariations::find($variation);
+
+        if (!$product_variation) {
+            return response()->json([
+                'message' => 'Product variation not found!',
+            ], 404);
+        }
+
+        $product_variation->stockEntries();
+        $stock_entries = $product_variation->stockEntries;
+
+        return response()->json([
+            'message' => 'Stock entries of variation listed successfully!',
+            'data' => $stock_entries,
         ], 200);
 
     }
