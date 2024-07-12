@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ProductVariations;
 
-class Product extends Model
+class Products extends Model
 {
     use HasFactory;
 

@@ -3,17 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Utils\ValidatorRequest;
-use App\Models\Product;
+use App\Models\Products;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class ProductsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $products = Product::get();
+        $products = Products::get();
 
         return response()->json([
             'message' => 'Products listeds successfully!',
@@ -44,10 +44,10 @@ class ProductController extends Controller
             return $error;
         }
 
-        $product = Product::create($request->all());
+        $product = Products::create($request->all());
 
         return response()->json([
-            'message' => 'Product created successfully!',
+            'message' => 'Products created successfully!',
             'data' => $product,
         ], 201);
     }
@@ -58,16 +58,16 @@ class ProductController extends Controller
      */
     public function show(int $id)
     {
-        $product = Product::find($id);
+        $product = Products::find($id);
 
         if (!$product) {
             return response()->json([
-                'message' => 'Product not found!',
+                'message' => 'Products not found!',
             ], 404);
         }
 
         return response()->json([
-            'message' => 'Product listed successfully!',
+            'message' => 'Products listed successfully!',
             'data' => $product,
         ], 200);
     }
@@ -75,7 +75,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(Products $product)
     {
         //
     }
@@ -83,7 +83,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Products $product)
     {
         //
     }
@@ -91,23 +91,23 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(Products $product)
     {
         //
     }
 
     public function variations(int $product_id)
     {
-        $product = Product::with('variants')->find($product_id);
+        $product = Products::with('variants')->find($product_id);
 
         if (!$product) {
             return response()->json([
-                'message' => 'Product not found!',
+                'message' => 'Products not found!',
             ], 404);
         }
 
         return response()->json([
-            'message' => 'Product with variations listed successfully!',
+            'message' => 'Products with variations listed successfully!',
             'data' => $product,
         ], 200);
     }
