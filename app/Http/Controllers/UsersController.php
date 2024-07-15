@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Http\Utils\ValidatorRequest;
+use App\Models\User;
+use App\Models\Carts;
 use App\Rules\StrongPassword;
 
 use Illuminate\Support\Facades\Gate;
@@ -115,4 +116,49 @@ class UsersController extends Controller
     {
         //
     }
+
+    public function cartItems(string $user_id)
+    {
+        $user = User::find($user_id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found!',
+                'data' => []
+            ], 404);
+        }
+
+        $cart = Carts::with([
+            'items' => function ($query) {
+                $query->select('id_cart_item', 'cart_id', 'order_id', 'product_variation_id', 'quantity', 'created_at');
+            }
+        ])->where('id_cart', $user_id)->first();
+
+        if (!$cart) {
+            return response()->json([
+                'message' => 'Cart not found!',
+                'data' => []
+            ], 404);
+        }
+
+        $user->cart = $cart->makeHidden(['created_at', 'updated_at']);
+
+        return response()->json([
+            'message' => 'Cart user items listed successfully!',
+            'data' => $user->only([
+                'id_user',
+                'name',
+                'born_date',
+                'address',
+                'cpf_cnpj',
+                'email',
+                'email_verified_at',
+                'remember_token',
+                'created_at',
+                'updated_at',
+                'cart'
+            ])
+        ], 202);
+    }
+
 }

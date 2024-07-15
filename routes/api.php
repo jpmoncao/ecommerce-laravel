@@ -10,11 +10,6 @@ use App\Http\Controllers\UsersController;
 use App\Http\Middleware\CheckTemporaryUser;
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
 
 /**
  * GERENCIAMENTO DE ESTOQUE
@@ -34,6 +29,11 @@ Route::get('/variations/{variation_id}/entries/stock', [ProductVariationsControl
 /**
  * GERENCIAMENTO DE COMPRA
  */
+
+// Recursos
 Route::resource('/users', UsersController::class)->middleware(CheckTemporaryUser::class);
 Route::resource('/carts', CartsController::class)->middleware(CheckTemporaryUser::class);
 Route::resource('/cart-items', CartItemsController::class)->middleware(CheckTemporaryUser::class);
+
+// Relacionamentos
+Route::get('/users/{user_id}/cart-items', [UsersController::class, 'cartItems']);
