@@ -25,5 +25,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('access-cart', function (User $user, string $id) {
             return $user->id_user === $id;
         });
+
+        Gate::define('access-user', function (User $user, string $id) {
+            return $user->id_user === $id;
+        });
     }
 }

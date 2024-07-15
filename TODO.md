@@ -11,8 +11,8 @@
 #
 ### Compra
 - [x] Remover item do carrinho
-- [ ] Criação de usuário
-- [ ] Listagem de perfil
+- [x] Criação de usuário
+- [x] Listagem de perfil
 - [ ] Recuperar senha [🧠]
 - [ ] Verificar email [🧠]
 - [ ] Histórico de compra [💡]

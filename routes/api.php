@@ -34,6 +34,6 @@ Route::get('/variations/{variation_id}/entries/stock', [ProductVariationsControl
 /**
  * GERENCIAMENTO DE COMPRA
  */
-Route::resource('/users', UsersController::class);
+Route::resource('/users', UsersController::class)->middleware(CheckTemporaryUser::class);
 Route::resource('/carts', CartsController::class)->middleware(CheckTemporaryUser::class);
 Route::resource('/cart-items', CartItemsController::class)->middleware(CheckTemporaryUser::class);

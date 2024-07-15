@@ -22,7 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'cpf',
+        'cpf_cnpj',
         'address',
         'born_date',
         'email_verified_at',
