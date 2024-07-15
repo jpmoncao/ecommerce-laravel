@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->string('id_user', 36)->primary();
             $table->string('name', 255)->default('user_temp');
             $table->date('born_date')->nullable();
-            $table->date('address')->nullable();
+            $table->string('address', 255)->nullable();
             $table->char('cpf_cnpj', 14)->nullable();
             $table->string('email', 255)->unique()->nullable();
             $table->string('password', 255)->nullable();
