@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CartsController;
+use App\Http\Controllers\CartItemsController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProductVariationsController;
 use App\Http\Controllers\ProductStockEntriesController;
@@ -35,3 +36,4 @@ Route::get('/variations/{variation_id}/entries/stock', [ProductVariationsControl
  */
 Route::resource('/users', UsersController::class);
 Route::resource('/carts', CartsController::class)->middleware(CheckTemporaryUser::class);
+Route::resource('/cart-items', CartItemsController::class)->middleware(CheckTemporaryUser::class);
