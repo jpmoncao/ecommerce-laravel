@@ -19,8 +19,10 @@ class CheckTemporaryUser
      */
     public function handle(Request $request, Closure $next)
     {
-        // Auth::logout();
-        // session()->remove('temp_user_id');
+        if (!@Auth::user()->id_user) {
+            Auth::logout();
+            session()->remove('temp_user_id');
+        }
 
         if (!Auth::check()) {
             if (!session()->has('temp_user_id')) {
