@@ -16,7 +16,7 @@
 
 <p align="center">
     ▪ Gerenciamento de estoque <br/>
-    ▪ Gerenciamento de compra ****<br/>
+    ▪ Gerenciamento de compra <br/>
     ▪ Gerenciamento de pedido <br/>
     ▪ Gerenciamento de financeiro <br/>
     ▪ Gerenciamento de entrega <br/>
