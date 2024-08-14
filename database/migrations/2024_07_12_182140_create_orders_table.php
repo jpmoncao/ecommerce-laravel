@@ -11,10 +11,10 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->id('id_order');
+            $table->unsignedBigInteger('id_order')->primary()->autoIncrement();
             $table->string('cart_id', 36)->index();
             $table->enum('status', ['pending', 'completed', 'canceled'])->default('pending');
-            $table->decimal('total_amount', 8, 2);
+            $table->decimal('total_amount', 8, 2)->default(0);
             $table->timestamps();
         });
     }

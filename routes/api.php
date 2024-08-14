@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartsController;
 use App\Http\Controllers\CartItemsController;
+use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProductVariationsController;
 use App\Http\Controllers\ProductStockEntriesController;
@@ -37,3 +38,11 @@ Route::resource('/cart-items', CartItemsController::class)->middleware(CheckTemp
 
 // Relacionamentos
 Route::get('/users/{user_id}/cart-items', [UsersController::class, 'cartItems']);
+
+
+/**
+ * GERENCIAMENTO DE PEDIDO
+ */
+
+// Recursos
+Route::resource('/orders', OrdersController::class);

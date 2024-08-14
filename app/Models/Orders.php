@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Orders extends Model
 {
     use HasFactory;
+    protected $table = 'orders';
+    protected $primaryKey = 'id_order';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
-        'id_order',
-        'user_id',
+        'cart_id',
         'status',
         'total_amount',
         'created_at',
