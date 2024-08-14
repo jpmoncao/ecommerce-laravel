@@ -33,7 +33,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-
+        // Cria objeto de validação
         $validate = new ValidatorRequest($request, [
             'name' => 'required|string|max:255',
             'born_date' => 'required|date',
@@ -43,17 +43,17 @@ class UsersController extends Controller
             'password' => ['required', 'string', 'min:8', new StrongPassword],
         ]);
 
+        // Valida se dados enviados batem com o objeto, caso não, dispara erro
         $error = $validate->handleErrors();
-        if ($error) {
+        if ($error)
             return $error;
-        }
 
-        if (!Gate::allows('access-user', $request->user()->id_user)) {
-            return response()->json([
-                'message' => 'User not authorized!',
-            ], 403);
-        }
+        // Verifica permissão (Gate) para "access-user"
+        if (!Gate::allows('access-user', $request->user()->id_user))
+            // Se não houver permissão, retorna uma mensagem de inautorizado
+            return response()->json(['message' => 'User not authorized!'], 403);
 
+        // Cria objeto com atributos do usuário
         $attributes = [
             'name' => $request->name,
             'born_date' => $request->born_date,
@@ -63,11 +63,13 @@ class UsersController extends Controller
             'password' => bcrypt($request->password)
         ];
 
+        // Cria ou atualiza usuário
         $user = User::updateOrCreate(
             ['id_user' => $request->user()->id_user],
             $attributes
         );
 
+        // Retorna o usuário com mensagem de sucesso
         return response()->json([
             'message' => 'User listed successfully!',
             'data' => $user,
@@ -79,14 +81,19 @@ class UsersController extends Controller
      */
     public function show(string $id_user, Request $request)
     {
-        if (!Gate::allows('access-user', $request->user()->id_user)) {
-            return response()->json([
-                'message' => 'User not authorized!',
-            ], 403);
-        }
+        // Verifica permissão (Gate) para "access-user"
+        if (!Gate::allows('access-user', $request->user()->id_user))
+            // Se não houver permissão, retorna uma mensagem de inautorizado
+            return response()->json(['message' => 'User not authorized!'], 403);
 
+        // Obtem usuário pelo id
         $user = User::find($id_user);
 
+        // Caso não encontre, dispara uma mensagem de não encontrado
+        if (!$user)
+            return response()->json(['message' => 'User not found!'], 404);
+
+        // Retorna usuário com mensagem de sucesso
         return response()->json([
             'message' => 'User listed with successfully!',
             'data' => $user,
@@ -119,30 +126,28 @@ class UsersController extends Controller
 
     public function cartItems(string $user_id)
     {
+        // Obtem usuário pelo id
         $user = User::find($user_id);
 
-        if (!$user) {
-            return response()->json([
-                'message' => 'User not found!',
-                'data' => []
-            ], 404);
-        }
+        // Caso não encontre, dispara uma mensagem de não encontrado
+        if (!$user)
+            return response()->json(['message' => 'User not found!'], 404);
 
+        // Obtém carrinho pelo id do usuário
         $cart = Carts::with([
             'items' => function ($query) {
                 $query->select('id_cart_item', 'cart_id', 'order_id', 'product_variation_id', 'quantity', 'created_at');
             }
         ])->where('id_cart', $user_id)->first();
 
-        if (!$cart) {
-            return response()->json([
-                'message' => 'Cart not found!',
-                'data' => []
-            ], 404);
-        }
+        // Caso não encontre, dispara mensagem de não encontrado
+        if (!$cart)
+            return response()->json(['message' => 'Cart not found!'], 404);
 
+        // Deixa os timestamps invisiveis e atribui carrinho ao usuário
         $user->cart = $cart->makeHidden(['created_at', 'updated_at']);
 
+        // Retorna usuário com carrinho e itens com mensagem de sucesso
         return response()->json([
             'message' => 'Cart user items listed successfully!',
             'data' => $user->only([

@@ -13,8 +13,10 @@ class ProductsController extends Controller
      */
     public function index()
     {
+        // Obtém produtos
         $products = Products::get();
 
+        // Retorna produtos com mensagem de sucesso
         return response()->json([
             'message' => 'Products listeds successfully!',
             'data' => $products,
@@ -34,18 +36,21 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
+        // Cria objeto de validação
         $validate = new ValidatorRequest($request, [
             'name' => 'required|string|max:50',
             'description' => 'nullable|string|max:255',
         ]);
 
+        // Valida se os dados batem com a validação, caso não, dispara erro
         $error = $validate->handleErrors();
-        if ($error) {
+        if ($error)
             return $error;
-        }
 
+        // Cria produto
         $product = Products::create($request->all());
 
+        // Retorna produto criado com mensagem de sucesso
         return response()->json([
             'message' => 'Products created successfully!',
             'data' => $product,
@@ -58,14 +63,14 @@ class ProductsController extends Controller
      */
     public function show(int $id)
     {
+        // Obtém produto pelo id dele
         $product = Products::find($id);
 
-        if (!$product) {
-            return response()->json([
-                'message' => 'Products not found!',
-            ], 404);
-        }
+        // Caso não encontre, dispara mensagem de não encontrado
+        if (!$product)
+            return response()->json(['message' => 'Products not found!'], 404);
 
+        // Retorna produto com mensagem de sucesso
         return response()->json([
             'message' => 'Products listed successfully!',
             'data' => $product,
@@ -98,14 +103,14 @@ class ProductsController extends Controller
 
     public function variations(int $product_id)
     {
+        // Obtém o produto pelo id dele
         $product = Products::with('variants')->find($product_id);
 
-        if (!$product) {
-            return response()->json([
-                'message' => 'Products not found!',
-            ], 404);
-        }
+        // Caso não encontre, dispara mensagem de não encontrado
+        if (!$product)
+            return response()->json(['message' => 'Products not found!'], 404);
 
+        // Retorna produto com mensagem de sucesso
         return response()->json([
             'message' => 'Products with variations listed successfully!',
             'data' => $product,

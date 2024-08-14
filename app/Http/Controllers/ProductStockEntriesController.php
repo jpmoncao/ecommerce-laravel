@@ -36,36 +36,39 @@ class ProductStockEntriesController extends Controller
      */
     public function store(Request $request)
     {
+        // Cria objeto de validação dos dados
         $validate = new ValidatorRequest($request, [
             'product_variation_id' => 'required|string|max:36',
             'quantity' => 'required|numeric',
             'observation' => 'nullable|string|max:255',
         ]);
 
+        // Valida se os dados enviados batem com o objeto, caso não, dispara erro
         $error = $validate->handleErrors();
-        if ($error) {
+        if ($error)
             return $error;
-        }
 
+        // Obtém variação do produto pelo id
         $product_variation = ProductVariations::find($request->product_variation_id);
-        if (!$product_variation) {
-            return response()->json([
-                'message' => 'Product variation not found!',
-                'data' => [],
-            ], 404);
-        }
 
+        // Caso não encontre, dispara mensagem de não encontrado
+        if (!$product_variation)
+            return response()->json(['message' => 'Product variation not found!'], 404);
+
+        // Obtém estoque da variação pelo id
         $product_stock = ProductStocks::find($product_variation->id_product_variation);
-        if (!$product_stock) {
-            return response()->json([
-                'message' => 'Product stock not found!',
-                'data' => [],
-            ], 404);
-        }
 
+        // Caso não encontre, dispara mensagem de não encontrado
+        if (!$product_stock)
+            return response()->json(['message' => 'Product stock not found!',], 404);
+
+        // Cria entrada de estoque da variação de produto
         $product_stock_entry = ProductStockEntries::create($request->all());
+
+        // Incrementa quantidade em estoque da variação
         $product_stock->update(['quantity' => $product_stock->quantity + $request->quantity]);
 
+        // Retorna entrada de estoque com mensagem de sucesso
         return response()->json([
             'message' => 'Product stock entry created successfully!',
             'data' => $product_stock_entry,
@@ -77,8 +80,10 @@ class ProductStockEntriesController extends Controller
      */
     public function show(string $product_stock_entry_id)
     {
+        // Obtém entrada de estoque pelo id
         $product_stock_entry = ProductStockEntries::find($product_stock_entry_id);
 
+        // Retorna entrada de estoque com mensagem de sucesso
         return response()->json([
             'message' => 'Product stock entry listed successfully!',
             'data' => $product_stock_entry,
