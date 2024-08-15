@@ -4,6 +4,7 @@
 -  [🧠] - Idéias de escopo de resolução com maior dificuldade
 -  [💡] - Idéias que poderiam agregar
 -  [🧨] - Prioridade de atualização (parte do fluxo de _use-case_)
+-  [🚀] - Fazendo
 
 #
 ### Geral
@@ -46,14 +47,15 @@
 #
 ### Pedido
 - [x] Criar pedido (vincula itens do carrinho sem pedido)
+- [ ] Conclui pedido
 - [ ] Cancela pedido [💡]
 - [ ] Cancela pedido inativo após X horas da emissão [🧠]
 - [ ] Acompanhar pedido [🧠]
 
 #
 ### Financeiro
-- [ ] Criar financeiro (após conclusção do **Pedido**)
-- [ ] Efetua pagamento
+- [x] Criar financeiro (após criar o **Pedido**) [🚀]
+- [ ] Efetua pagamento (conclui o **Pedido**)
 - [ ] Salva histório de pagamento
 - [ ] Emitir comprovante de pagamento [💡]
 - [ ] Gateway de pagamento [💡]

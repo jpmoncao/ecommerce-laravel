@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CartItems;
+use App\Models\Financials;
 use App\Models\Orders;
 
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class OrdersController extends Controller
             return response()->json(['message' => 'Cart not authorized!'], 403);
 
         // Cria pedido
-        $order = Orders::create(['cart_id' => $request->user()->id_user,]);
+        $order = Orders::create(['cart_id' => $request->user()->id_user]);
 
         // Atualiza os itens sem pedido passando o id do pedido gerado
         $count_items_updated = CartItems::where('cart_id', $request->user()->id_user)
@@ -76,6 +77,9 @@ class OrdersController extends Controller
         // Caso não encontre o pedido, dispara mensagem de não encontrado
         if (!$order)
             return response()->json(['message' => 'Order not found!'], 404);
+
+        // Cria financeiro
+        Financials::create(['order_id' => $order->id_order]);
 
         // Retorna pedido com mensagem de sucesso
         return response()->json([
