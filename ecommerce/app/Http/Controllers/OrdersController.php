@@ -38,54 +38,69 @@ class OrdersController extends Controller
             // Caso não, dispara mensagem de não autorizado
             return response()->json(['message' => 'Cart not authorized!'], 403);
 
-        // Cria pedido
-        $order = Orders::create(['cart_id' => $request->user()->id_user]);
+        try {
+            // Inicia transação
+            DB::beginTransaction();
 
-        // Atualiza os itens sem pedido passando o id do pedido gerado
-        $count_items_updated = CartItems::where('cart_id', $request->user()->id_user)
-            ->whereNull('order_id')
-            ->update(['order_id' => $order->id_order]);
+            // Cria pedido
+            $order = Orders::create(['cart_id' => $request->user()->id_user]);
 
-        // Caso nenhum item foi alterado, dispara mensagem de itens não encontrados
-        if ($count_items_updated <= 0) {
-            return response()->json([
-                'message' => 'No items to add to the order.',
-                'data' => [],
-            ], 404);
-        }
+            // Atualiza os itens sem pedido passando o id do pedido gerado
+            $count_items_updated = CartItems::where('cart_id', $request->user()->id_user)
+                ->whereNull('order_id')
+                ->update(['order_id' => $order->id_order]);
 
-        // Obtém soma total do valor do carrinho
-        $total_amount = CartItems::where('order_id', $order->id_order)
-            ->join('product_variations', 'cart_items.product_variation_id', '=', 'product_variations.id_product_variation')
-            ->sum(DB::raw('cart_items.quantity * product_variations.amount'));
-
-        // Atualiza o total do valor do pedido
-        $order->update(['total_amount' => $total_amount]);
-
-        // Obtém o pedido pelo id
-        $order = Orders::with([
-            'items.productVariation' => function ($query) {
-                $query->select(
-                    "id_product_variation",
-                    "variation",
-                    "amount",
-                    "product_id"
-                );
+            // Caso nenhum item foi alterado, dispara mensagem de itens não encontrados
+            if ($count_items_updated <= 0) {
+                return response()->json([
+                    'message' => 'No items to add to the order.',
+                    'data' => [],
+                ], 404);
             }
-        ])->where('id_order', $order->id_order)->first();
 
-        // Caso não encontre o pedido, dispara mensagem de não encontrado
-        if (!$order)
-            return response()->json(['message' => 'Order not found!'], 404);
+            // Obtém soma total do valor do carrinho
+            $total_amount = CartItems::where('order_id', $order->id_order)
+                ->join('product_variations', 'cart_items.product_variation_id', '=', 'product_variations.id_product_variation')
+                ->sum(DB::raw('cart_items.quantity * product_variations.amount'));
 
-        // Cria financeiro
-        Financials::create(['order_id' => $order->id_order]);
+            // Atualiza o total do valor do pedido
+            $order->update(['total_amount' => $total_amount]);
 
-        // Retorna pedido com mensagem de sucesso
-        return response()->json([
-            'message' => 'Order created successfully!',
-            'data' => $order
-        ], 201);
+            // Obtém o pedido pelo id
+            $order = Orders::with([
+                'items.productVariation' => function ($query) {
+                    $query->select(
+                        "id_product_variation",
+                        "variation",
+                        "amount",
+                        "product_id"
+                    );
+                }
+            ])->where('id_order', $order->id_order)->first();
+
+            // Caso não encontre o pedido, dispara mensagem de não encontrado
+            if (!$order)
+                return response()->json(['message' => 'Order not found!'], 404);
+
+            // Cria financeiro
+            Financials::create(['order_id' => $order->id_order]);
+
+            // Confirma transação
+            DB::commit();
+
+            // Retorna pedido com mensagem de sucesso
+            return response()->json([
+                'message' => 'Order created successfully!',
+                'data' => $order
+            ], 201);
+
+        } catch (\Exception $e) {
+            // Cancela transação
+            DB::rollBack();
+
+            // Dispara erro
+            throw $e;
+        }
     }
 
     /**
