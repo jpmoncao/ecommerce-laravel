@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\ProductStockEntries;
 use App\Models\ProductVariations;
 use App\Models\ProductStocks;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 use App\Http\Utils\ValidatorRequest;
 
 class ProductStockEntriesController extends Controller
@@ -48,31 +51,44 @@ class ProductStockEntriesController extends Controller
         if ($error)
             return $error;
 
-        // Obtém variação do produto pelo id
-        $product_variation = ProductVariations::find($request->product_variation_id);
+        // Inicia transação
+        DB::beginTransaction();
+        try {
+            // Obtém variação do produto pelo id
+            $product_variation = ProductVariations::find($request->product_variation_id);
 
-        // Caso não encontre, dispara mensagem de não encontrado
-        if (!$product_variation)
-            return response()->json(['message' => 'Product variation not found!'], 404);
+            // Caso não encontre, dispara mensagem de não encontrado
+            if (!$product_variation)
+                return response()->json(['message' => 'Product variation not found!'], 404);
 
-        // Obtém estoque da variação pelo id
-        $product_stock = ProductStocks::find($product_variation->id_product_variation);
+            // Obtém estoque da variação pelo id
+            $product_stock = ProductStocks::find($product_variation->id_product_variation);
 
-        // Caso não encontre, dispara mensagem de não encontrado
-        if (!$product_stock)
-            return response()->json(['message' => 'Product stock not found!',], 404);
+            // Caso não encontre, dispara mensagem de não encontrado
+            if (!$product_stock)
+                return response()->json(['message' => 'Product stock not found!',], 404);
 
-        // Cria entrada de estoque da variação de produto
-        $product_stock_entry = ProductStockEntries::create($request->all());
+            // Cria entrada de estoque da variação de produto
+            $product_stock_entry = ProductStockEntries::create($request->all());
 
-        // Incrementa quantidade em estoque da variação
-        $product_stock->update(['quantity' => $product_stock->quantity + $request->quantity]);
+            // Incrementa quantidade em estoque da variação
+            $product_stock->update(['quantity' => $product_stock->quantity + $request->quantity]);
 
-        // Retorna entrada de estoque com mensagem de sucesso
-        return response()->json([
-            'message' => 'Product stock entry created successfully!',
-            'data' => $product_stock_entry,
-        ], 201);
+            // Salva a transação
+            DB::commit();
+
+            // Retorna entrada de estoque com mensagem de sucesso
+            return response()->json([
+                'message' => 'Product stock entry created successfully!',
+                'data' => $product_stock_entry,
+            ], 201);
+        } catch (\Exception $e) {
+            // Cancela transação
+            DB::rollBack();
+
+            // Lança exceção para ser tratada conforme necessário
+            return response()->json(['message' => $e->getMessage() ?? 'An error occurred during the order creation process.'], 502);
+        }
     }
 
     /**
