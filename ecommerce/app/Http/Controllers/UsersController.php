@@ -8,6 +8,8 @@ use App\Models\Carts;
 use App\Rules\StrongPassword;
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
@@ -124,8 +126,46 @@ class UsersController extends Controller
         //
     }
 
+    public function login(Request $request)
+    {
+        // Cria objeto de validação
+        $validate = new ValidatorRequest($request, [
+            'email' => 'required|string|max:255|email',
+            'password' => ['required', 'string', 'min:8', new StrongPassword],
+        ]);
+
+        // Valida se dados enviados batem com o objeto, caso não, dispara erro
+        $error = $validate->handleErrors();
+        if ($error)
+            return $error;
+
+        // Obtém usuário pelo email
+        $user = User::where('email', $request->email)->first();
+
+        // Caso não encontre, dispara mensagem de não encontrado
+        if (!$user)
+            return response()->json(['message' => 'User with this email not found!'], 404);
+
+        // Verifica se a senha está correta
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Password is not valid!'], 404);
+        }
+
+        // Autentica o usuário e inicia a sessão
+        Auth::login($user);
+
+        // Retorna resposta de sucesso
+        return response()->json(['message' => 'Login successful!'], 203);
+    }
+
+
     public function cartItems(string $user_id)
     {
+        // Verifica permissão (Gate) para "access-user"
+        if (!Gate::allows('access-user', $user_id))
+            // Se não houver permissão, retorna uma mensagem de inautorizado
+            return response()->json(['message' => 'User not authorized!'], 403);
+
         // Obtem usuário pelo id
         $user = User::find($user_id);
 

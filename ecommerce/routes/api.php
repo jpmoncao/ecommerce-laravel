@@ -32,6 +32,8 @@ Route::get('/variations/{variation_id}/entries/stock', [ProductVariationsControl
  */
 
 // Recursos
+Route::post('/login', [UsersController::class, 'login']);
+
 Route::resource('/users', UsersController::class)->middleware(CheckTemporaryUser::class);
 Route::resource('/carts', CartsController::class)->middleware(CheckTemporaryUser::class);
 Route::resource('/cart-items', CartItemsController::class)->middleware(CheckTemporaryUser::class);
