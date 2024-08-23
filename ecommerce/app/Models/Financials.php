@@ -20,18 +20,30 @@ class Financials extends Model
         'updated_at',
     ];
 
-    public function total_amount()
+    public function totalAmount()
     {
         $orderTotalAmount = Orders::where('id_order', $this->order_id)->value('total_amount');
         return $orderTotalAmount;
     }
 
-    public function paid_amount()
+    public function paidAmount()
     {
         $financialPaidAmount = Payments::where('id_financial', $this->id_financial)
             ->where('authorized', true)
             ->sum('amount');
         return $financialPaidAmount;
+    }
+
+    public function lastPaymentSequencial()
+    {
+        $latestPayment = Payments::where('id_financial', $this->id_financial)
+            ->where('authorized', true)
+            ->latest();
+
+        if (!$latestPayment)
+            return 0;
+
+        return $latestPayment->sequencial;
     }
 
 }
