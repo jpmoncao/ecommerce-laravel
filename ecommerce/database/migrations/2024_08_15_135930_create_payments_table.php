@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->string('id_payment', 36)->primary();
             $table->integer('id_financial')->index();
             $table->decimal('amount', 15, 2);
-            $table->decimal('discount', 15, 2);
-            $table->decimal('surcharge', 15, 2);
+            $table->decimal('discount', 15, 2)->default(0);
+            $table->decimal('surcharge', 15, 2)->default(0);
             $table->enum('method', ['card', 'bankslip', 'digital_payment']);
             $table->boolean('authorized')->default(false);
             $table->integer('sequencial');
