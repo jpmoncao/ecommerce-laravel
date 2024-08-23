@@ -55,8 +55,9 @@
 #
 ### Financeiro
 - [x] Criar financeiro (após criar o **Pedido**) [🚀]
-- [ ] Efetua pagamento (conclui o **Pedido**)
-- [ ] Salva histório de pagamento
+- [x] Registra pagamento
+- [ ] Autoriza pagamento
+- [x] Efetua pagamento do pedido
 - [ ] Emitir comprovante de pagamento [💡]
 - [ ] Gateway de pagamento [💡]
 - [ ] Cashback [🧠]
