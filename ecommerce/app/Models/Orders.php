@@ -25,4 +25,17 @@ class Orders extends Model
     {
         return $this->hasMany(CartItems::class, 'order_id', 'id_order');
     }
+
+    public function toComplete()
+    {
+        $this->update(['status' => 'completed']);
+
+        $items = $this->items();
+        foreach ($items as $item) {
+            $itemIdProductVariation = $item->id_product_variation;
+            $itemQuantitity = $item->quantitity;
+
+            
+        }
+    }
 }

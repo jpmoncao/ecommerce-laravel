@@ -43,20 +43,9 @@ class Payments extends Model
         $financialTotalAmount = $financial->totalAmount();
 
         // Se o valor pago for igual o valor total (último pagamento)
-        if ($financialPaidAmount == $financialTotalAmount) {
-            // obtém pedido pelo id
-            $order = Orders::where('id_order', $financial->order_id);
-
-            // Caso não encontre, dispara mensagem de não encontrado
-            if (!$order)
-                return response()->json(['message' => 'Order not found!'], 404);
-
+        if ($financialPaidAmount == $financialTotalAmount)
             // Atualiza financeiro para status "Pago"
             $financial->update(['status' => 'paid']);
-
-            //Atualiza pedido para status "Completo"
-            $order->update(['status' => 'completed']);
-        }
     }
 
 }

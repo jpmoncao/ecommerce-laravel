@@ -61,6 +61,12 @@ class PaymentsController extends Controller
         if ($financialPaidAmount + $request->amount > $financialTotalAmount)
             return response()->json(['message' => 'The payment amount will exceed the total to be paid!'], 403);
 
+        /**
+         * Minha intenção é criar uma conexão com um gateway de pagamento aqui, para que antes de criar o
+         * pagamento ele valide o pagamento na "vida real", em caso de sucesso, ele cadastra no banco de 
+         * dados. Mas por enquanto todo pagamento é autorizado.
+         */
+
         // Cria pagamento
         $atributtes = [
             'financial_id' => $request->financial_id,
@@ -71,6 +77,25 @@ class PaymentsController extends Controller
             'sequencial' => $financial->lastPaymentSequencial() + 1
         ];
         $payment = Payments::create($atributtes);
+
+        // Autoriza o pagamento e verifica o financeiro
+        $payment->toAuthorize();
+
+        // Obtém o financeiro pelo id
+        $financial = Financials::where('id_financial', $request->financial_id);
+
+        // Se o financeiro foi pago, chama o método de conclusão do pedido
+        if ($financial->status == 'paid') {
+            // Obtém pedido pelo id
+            $order = Orders::where('id_order', $financial->order_id);
+
+            // Caso não encontre, dispara mensagem de não encontrado
+            if (!$order)
+                return response()->json(['message' => 'Order not found!'], 404);
+
+            //Atualiza pedido para status "Completo"
+            $order->toComplete();
+        }
 
         // Retorna pagamento com mensagem de sucesso
         return response()->json([
