@@ -34,9 +34,9 @@ class OrdersController extends Controller
     public function store(Request $request)
     {
         // Verifica se tem permissão (Gate) para "access-cart"
-        if (!Gate::allows('access-cart', $request->user()->id_user))
-            // Caso não, dispara mensagem de não autorizado
-            return response()->json(['message' => 'Cart not authorized!'], 403);
+        if (!Gate::allows('access-cart', $request->user()->id_user)) {
+            throw new \Exception('Cart not authorized!');
+        }
 
         try {
             // Inicia transação
@@ -45,18 +45,20 @@ class OrdersController extends Controller
             // Cria pedido
             $order = Orders::create(['cart_id' => $request->user()->id_user]);
 
+            // Verifica se há itens no carrinho sem pedido associado
+            $count_items_to_update = CartItems::where('cart_id', $request->user()->id_user)
+                ->whereNull('order_id')
+                ->count();
+
+            // Caso não haja itens a serem atualizados, dispara exceção
+            if ($count_items_to_update <= 0) {
+                throw new \Exception('No items to add to the order.');
+            }
+
             // Atualiza os itens sem pedido passando o id do pedido gerado
-            $count_items_updated = CartItems::where('cart_id', $request->user()->id_user)
+            CartItems::where('cart_id', $request->user()->id_user)
                 ->whereNull('order_id')
                 ->update(['order_id' => $order->id_order]);
-
-            // Caso nenhum item foi alterado, dispara mensagem de itens não encontrados
-            if ($count_items_updated <= 0) {
-                return response()->json([
-                    'message' => 'No items to add to the order.',
-                    'data' => [],
-                ], 404);
-            }
 
             // Obtém soma total do valor do carrinho
             $total_amount = CartItems::where('order_id', $order->id_order)
@@ -78,9 +80,10 @@ class OrdersController extends Controller
                 }
             ])->where('id_order', $order->id_order)->first();
 
-            // Caso não encontre o pedido, dispara mensagem de não encontrado
-            if (!$order)
-                return response()->json(['message' => 'Order not found!'], 404);
+            // Caso não encontre o pedido, dispara exceção
+            if (!$order) {
+                throw new \Exception('Order not found!');
+            }
 
             // Cria financeiro
             Financials::create(['order_id' => $order->id_order]);
@@ -98,8 +101,8 @@ class OrdersController extends Controller
             // Cancela transação
             DB::rollBack();
 
-            // Dispara erro
-            throw $e;
+            // Lança exceção para ser tratada conforme necessário
+            return response()->json(['message' => $e->getMessage() ?? 'An error occurred during the order creation process.'], 502);
         }
     }
 
