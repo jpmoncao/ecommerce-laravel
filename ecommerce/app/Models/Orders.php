@@ -35,7 +35,8 @@ class Orders extends Model
             $itemIdProductVariation = $item->id_product_variation;
             $itemQuantitity = $item->quantitity;
 
-            
+            $productStock = ProductStocks::where($itemIdProductVariation);
+            $productStock->update(['quantity' => $productStock->quantity - $itemQuantitity]);
         }
     }
 }
