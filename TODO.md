@@ -27,6 +27,7 @@
 - [ ] Baixa de estoque ao confirmar produto [🧨]
 - [ ] Filtro de categorias [💡]
 - [ ] Cadastro de imagens do produto [🧠]
+- [ ] Cadastrar saídas/baixas de estoque para histórico [💡]
 
 #
 ### Compra
@@ -61,3 +62,9 @@
 - [ ] Emitir comprovante de pagamento [💡]
 - [ ] Gateway de pagamento [💡]
 - [ ] Cashback [🧠]
+
+#
+### Logistica
+- [ ] Integrar com transportadora [🧠]
+- [ ] Rastrear pedido [🧠]
+- [ ] Atualizar para entregue [🧠]
