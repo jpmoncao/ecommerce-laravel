@@ -8,8 +8,8 @@
 
 #
 ### Geral
-- [ ] Controle de transações
-- [ ] Tratamento de erros com exceptions
+- [x] Controle de transações
+- [x] Tratamento de erros com exceptions
 - [ ] Promoções [🧠]
 
 #
@@ -24,9 +24,10 @@
 - [x] Criar entrada de estoque
 - [x] Listar entradas de estoque
 - [ ] Estornar entrada de estoque [💡]
-- [ ] Baixa de estoque ao confirmar produto [🧨]
+- [x] Baixa de estoque ao confirmar produto [🧨]
 - [ ] Filtro de categorias [💡]
 - [ ] Cadastro de imagens do produto [🧠]
+- [ ] Cadastrar saídas/baixas de estoque para histórico [💡]
 
 #
 ### Compra
@@ -47,7 +48,7 @@
 #
 ### Pedido
 - [x] Criar pedido (vincula itens do carrinho sem pedido)
-- [ ] Conclui pedido
+- [x] Conclui pedido
 - [ ] Cancela pedido [💡]
 - [ ] Cancela pedido inativo após X horas da emissão [🧠]
 - [ ] Acompanhar pedido [🧠]
@@ -61,3 +62,9 @@
 - [ ] Emitir comprovante de pagamento [💡]
 - [ ] Gateway de pagamento [💡]
 - [ ] Cashback [🧠]
+
+#
+### Logistica
+- [ ] Integrar com transportadora [🧠]
+- [ ] Rastrear pedido [🧠]
+- [ ] Atualizar para entregue [🧠]
