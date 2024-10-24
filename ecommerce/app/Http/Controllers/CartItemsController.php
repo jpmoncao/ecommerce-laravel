@@ -13,22 +13,7 @@ use Illuminate\Http\Request;
 
 class CartItemsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
+   
     /**
      * Store a newly created resource in storage.
      */
@@ -111,31 +96,7 @@ class CartItemsController extends Controller
             'data' => $cart,
         ], 201);
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(CartItems $orderItems)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(CartItems $orderItems)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, CartItems $orderItems)
-    {
-        //
-    }
-
+    
     /**
      * Remove the specified resource from storage.
      */
