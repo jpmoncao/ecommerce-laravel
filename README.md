@@ -1,4 +1,4 @@
-<h1 align="center">E-Commerce</h1>
+<h1 align="center">API eCommerce</h1>
 
 ###
 
@@ -6,7 +6,7 @@
 
 ###
 
-<p align="center">Nesse projeto desenvolvi um ecommerce simples para controle de ponta-a-ponta da experiência do usuario ao comprar e do administrador ao gerir.</p>
+<p align="center">Nesse projeto desenvolvi um eCommerce simples para controle de ponta-a-ponta da experiência do usuario ao comprar e do administrador ao gerir.</p>
 
 ###
 
