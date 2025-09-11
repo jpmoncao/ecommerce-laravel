@@ -1,5 +1,6 @@
 # baseURL
 @baseURL = http://localhost:8000/api
+@productId = 1
 
 ###
 # Find All Products
@@ -17,8 +18,8 @@ Content-Type: application/json
 
 ###
 # Find Product by Id
-GET {{ baseURL }}/products/1
+GET {{ baseURL }}/products/{{ productId }}
 
 ###
 # Find Product Variations by Product Id
-GET {{ baseURL }}/products/1/variations
+GET {{ baseURL }}/products/{{ productId }}/variations
