@@ -18,9 +18,9 @@ class ProductsController extends Controller
 
         // Retorna produtos com mensagem de sucesso
         return response()->json([
-            'message' => 'Products listeds successfully!',
+            'message' => 'Products listed successfully!',
             'data' => $products,
-        ], 201);
+        ], 200);
     }
 
     /**
@@ -28,6 +28,7 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
+
         // Cria objeto de validação
         $validate = new ValidatorRequest($request, [
             'name' => 'required|string|max:50',
@@ -60,11 +61,11 @@ class ProductsController extends Controller
 
         // Caso não encontre, dispara mensagem de não encontrado
         if (!$product)
-            return response()->json(['message' => 'Products not found!'], 404);
+            return response()->json(['message' => 'Product not found!'], 404);
 
         // Retorna produto com mensagem de sucesso
         return response()->json([
-            'message' => 'Products listed successfully!',
+            'message' => 'Product listed successfully!',
             'data' => $product,
         ], 200);
     }
@@ -76,7 +77,7 @@ class ProductsController extends Controller
 
         // Caso não encontre, dispara mensagem de não encontrado
         if (!$product)
-            return response()->json(['message' => 'Products not found!'], 404);
+            return response()->json(['message' => 'Product not found!'], 404);
 
         // Retorna produto com mensagem de sucesso
         return response()->json([
@@ -84,5 +85,4 @@ class ProductsController extends Controller
             'data' => $product,
         ], 200);
     }
-
 }
