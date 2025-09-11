@@ -38,7 +38,31 @@
   <img src="https://skillicons.dev/icons?i=vscode" height="40" alt="vscode logo"  />
 </div>
 
+### 
+
+<h3 align="center">Getting Started</h3>
+
 ###
+
+Para rodar na sua máquina:
+
+```bash
+cd ecommerce/ecommerce-laravel
+
+composer install
+
+cp .env.example .env # change environment variables
+
+php artisan key:generate
+
+php artisan session:table
+
+php artisan migrate
+
+php artisan serve
+```
+
+Abra [http://localhost:8000](http://localhost:8000) no seu navegador.
 
 <h1 align="left"></h1>
 
