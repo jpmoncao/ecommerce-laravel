@@ -1,0 +1,24 @@
+# baseURL
+@baseURL = http://localhost:8000/api
+
+###
+# Find All Products
+GET {{ baseURL }}/products
+
+###
+# Create Product
+POST {{ baseURL }}/products
+Content-Type: application/json
+
+{
+    "name": "Caderno Universitário ZIP TILIBRA",
+    "description": "- Capa: dura\n- Espiral: colorido\n- Folhas: pautadas\n- Índice\n- Miolo\n- Número de matérias: 10 matérias\n- Produto certificado: FSC\n- Formato: 200mm x 275mm\n- Gramatura: 56 g/m²\n- Número de folhas: 160 folhas"
+}
+
+###
+# Find Product by Id
+GET {{ baseURL }}/products/1
+
+###
+# Find Product Variations by Product Id
+GET {{ baseURL }}/products/1/variations
