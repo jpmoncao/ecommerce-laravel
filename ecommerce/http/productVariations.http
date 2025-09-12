@@ -1,0 +1,45 @@
+# baseURL
+@baseURL = http://localhost:8000/api
+@productVariationId = 2989552c-6b95-4d6b-ad94-ef3a72e046f3
+
+###
+# Find Variation By Id
+GET {{ baseURL }}/variations/{{ productVariationId }}
+
+###
+# Create Product Variation
+POST {{ baseURL }}/variations
+Content-Type: application/json
+
+{
+    "variation": "10 Matérias Preto",
+    "amount": 10,
+    "product_id": 1
+}
+
+###
+# Edit Product Variation
+PUT {{ baseURL }}/variations/{{ productVariationId }}
+Content-Type: application/json
+
+{
+    "variation": "10 Matérias Vermelho",
+    "amount": 10,
+    "product_id": 1
+}
+
+###
+# Delete Product Variation
+DELETE {{ baseURL }}/variations/{{ productVariationId }}
+
+###
+# Find Product By Variation Id
+GET {{ baseURL }}/variations/{{ productVariationId }}/product
+
+###
+# Find Stock By Variation Id
+GET {{ baseURL }}/variations/{{ productVariationId }}/stock
+
+###
+# Find Stock Entries By Variation Id
+GET {{ baseURL }}/variations/{{ productVariationId }}/entries/stock
