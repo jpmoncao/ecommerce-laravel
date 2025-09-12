@@ -10,6 +10,25 @@ use App\Http\Utils\ValidatorRequest;
 class ProductVariationsController extends Controller
 {
     /**
+     * Display the specified resource.
+     */
+    public function show(string $product_variation_id)
+    {
+        // Obtém a variação pelo id
+        $product_variation = ProductVariations::find($product_variation_id);
+
+        // Caso não encontre, dispara mensagem de não encontrado
+        if (!$product_variation)
+            return response()->json(['message' => 'Product variation not found!'], 404);
+
+        // Retorna a variação com uma mensagem de sucesso
+        return response()->json([
+            'message' => 'Product variation listed successfully!',
+            'data' => $product_variation,
+        ], 200);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -38,25 +57,6 @@ class ProductVariationsController extends Controller
             'message' => 'Product variation created successfully!',
             'data' => $product_variation,
         ], 201);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $product_variation_id)
-    {
-        // Obtém a variação pelo id
-        $product_variation = ProductVariations::find($product_variation_id);
-
-        // Caso não encontre, dispara mensagem de não encontrado
-        if (!$product_variation)
-            return response()->json(['message' => 'Product variation not found!'], 404);
-
-        // Retorna a variação com uma mensagem de sucesso
-        return response()->json([
-            'message' => 'Product variation listed successfully!',
-            'data' => $product_variation,
-        ], 200);
     }
 
     /**
@@ -154,7 +154,6 @@ class ProductVariationsController extends Controller
             'message' => 'Stock of variation listed successfully!',
             'data' => $stock,
         ], 200);
-
     }
 
     public function stockEntries(string $variation)
@@ -177,6 +176,5 @@ class ProductVariationsController extends Controller
             'message' => 'Stock entries of variation listed successfully!',
             'data' => $stock_entries,
         ], 200);
-
     }
 }

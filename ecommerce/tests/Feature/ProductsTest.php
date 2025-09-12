@@ -5,12 +5,14 @@ namespace Tests\Feature;
 use App\Models\Products;
 use App\Models\ProductVariations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class ProductsTest extends TestCase
 {
     use RefreshDatabase;
+    use WithFaker;
 
     private const VALID_PRODUCT_ID = 1;
     private const INVALID_PRODUCT_ID = 999;
@@ -63,7 +65,7 @@ class ProductsTest extends TestCase
 
     public function test_should_create_product(): void
     {
-        $PRODUCT_NAME = 'Product Test';
+        $PRODUCT_NAME = $this->faker->word();
 
         $response = $this->post("/api/products", ['name' => $PRODUCT_NAME]);
 

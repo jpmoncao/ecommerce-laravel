@@ -26,13 +26,15 @@ class ProductVariations extends Model
         parent::boot();
 
         static::creating(function ($productVariation) {
-            $productVariation->id_product_variation = (string) Str::uuid();
+            if (empty($productVariation->id_product_variation)) {
+                $productVariation->id_product_variation = (string) Str::uuid();
+            }
         });
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id_product');
+        return $this->belongsTo(Products::class, 'product_id', 'id_product');
     }
 
     public function stock()

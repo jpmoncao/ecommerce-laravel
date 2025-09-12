@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('product_variation_id');
             $table->float('quantity');
             $table->string('observation')->nullable();
-            $table->foreign('product_variation_id')->references('id_product_variation')->on('product_variations');
+            $table->foreign('product_variation_id')->references('id_product_variation')->on('product_variations')->cascadeOnDelete();;
             $table->timestamps();
         });
     }

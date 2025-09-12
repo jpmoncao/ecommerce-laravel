@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Products;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,6 +18,7 @@ class ProductVariationsFactory extends Factory
     public function definition(): array
     {
         return [
+            'product_id' => Products::factory(),
             'variation' => $this->faker->word(),
             'amount' => $this->faker->randomDigit()
         ];

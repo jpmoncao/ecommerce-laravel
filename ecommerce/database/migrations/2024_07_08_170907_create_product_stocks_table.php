@@ -12,8 +12,8 @@ return new class extends Migration {
     {
         Schema::create('product_stocks', function (Blueprint $table) {
             $table->string('id_stock', 36)->primary();
-            $table->float('quantity')->default(0);
-            $table->foreign('id_stock')->references('id_product_variation')->on('product_variations');
+            $table->float('quantity', 10, 2)->default(0);
+            $table->foreign('id_stock')->references('id_product_variation')->on('product_variations')->cascadeOnDelete();
             $table->timestamps();
         });
     }
