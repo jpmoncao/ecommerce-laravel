@@ -1,0 +1,22 @@
+# baseURL
+@baseURL = http://localhost:8000/api
+@productStockEntryId = b9438b2d-b4fa-4405-9292-7b516ca7a27a
+
+###
+# Find All Product Stock Entries
+GET {{ baseURL }}/entries/stock
+
+###
+# Create Product Stock Entry
+POST {{ baseURL }}/entries/stock
+Content-Type: application/json
+
+{
+    "product_variation_id": "63e1ba22-6b51-48ca-b57b-6c90c5ef62fb",
+    "quantity": 10,
+    "observation": "Lorem Ipsum sit dolor amet"
+}
+
+###
+# Find Product Stock Entry By Id
+GET {{ baseURL }}/entries/stock/{{ productStockEntryId }}

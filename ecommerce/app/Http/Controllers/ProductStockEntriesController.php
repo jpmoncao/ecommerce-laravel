@@ -23,7 +23,7 @@ class ProductStockEntriesController extends Controller
         return response()->json([
             'message' => 'Products stock entries listeds successfully!',
             'data' => $products_stock_entries,
-        ], 201);
+        ], 200);
     }
 
     /**
