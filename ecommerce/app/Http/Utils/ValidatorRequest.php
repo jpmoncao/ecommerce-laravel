@@ -1,7 +1,8 @@
 <?php
+
 namespace App\Http\Utils;
 
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
@@ -147,5 +148,10 @@ class ValidatorRequest
         }
 
         return false;
+    }
+
+    public function validated()
+    {
+        return $this->validator->safe()->all();
     }
 }

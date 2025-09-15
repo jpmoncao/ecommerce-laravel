@@ -24,8 +24,7 @@ Content-Type: application/json
 
 {
     "variation": "10 Matérias Vermelho",
-    "amount": 10,
-    "product_id": 1
+    "amount": 8
 }
 
 ###

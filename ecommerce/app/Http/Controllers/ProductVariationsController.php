@@ -66,9 +66,8 @@ class ProductVariationsController extends Controller
     {
         // Cria objeto de validação
         $validate = new ValidatorRequest($request, [
-            'variant' => 'sometimes|required|string|max:250',
-            'amount' => 'sometimes|required|numeric',
-            'product_id' => 'sometimes|required|integer',
+            'variantion' => 'sometimes|required|string|max:250',
+            'amount' => 'sometimes|required|numeric'
         ]);
 
         // Valida se os dados enviados batem com o objeto, caso não, dispara erro
