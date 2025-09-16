@@ -1,0 +1,35 @@
+# baseURL
+@baseURL = http://localhost:8000/api
+@userId = 270e30d2-baaa-4263-9bd8-be8d69c0d9db
+
+###
+# Login User
+POST {{ baseURL }}/login
+Content-Type: application/json
+
+{
+    "email": "johndoe@email.com",
+    "password": "StrongPassword@1234"
+}
+
+###
+# Create User
+POST {{ baseURL }}/users
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "born_date": "1999-01-01",
+    "address": "Any Address",
+    "cpf_cnpj": "71651383820",
+    "email": "johndoe@email.com",
+    "password": "StrongPassword@1234"
+}
+
+###
+# Find User By Id
+GET {{ baseURL }}/users/{{ userId }}
+
+###
+# Find User Items In Cart By Id
+GET {{ baseURL }}/users/{{ userId }}/cart-items
