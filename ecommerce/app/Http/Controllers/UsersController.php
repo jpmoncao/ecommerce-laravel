@@ -81,9 +81,9 @@ class UsersController extends Controller
 
         // Retorna usuário com mensagem de sucesso
         return response()->json([
-            'message' => 'User listed with successfully!',
+            'message' => 'User listed successfully!',
             'data' => $user,
-        ], 201);
+        ], 200);
     }
 
     public function login(Request $request)
@@ -115,7 +115,7 @@ class UsersController extends Controller
         Auth::login($user);
 
         // Retorna resposta de sucesso
-        return response()->json(['message' => 'Login successful!'], 203);
+        return response()->json(['message' => 'Login successful!'], 200);
     }
 
 
@@ -163,7 +163,6 @@ class UsersController extends Controller
                 'updated_at',
                 'cart'
             ])
-        ], 202);
+        ], status: 200);
     }
-
 }
