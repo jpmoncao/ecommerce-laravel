@@ -47,7 +47,7 @@
 Para rodar na sua máquina:
 
 ```bash
-cd ecommerce/ecommerce-laravel
+cd ecommerce-laravel/api
 
 composer install
 
