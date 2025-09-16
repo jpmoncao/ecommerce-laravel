@@ -9,6 +9,8 @@ use Tests\TestCase;
 
 class CartsTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_should_list_cart_by_user_id(): void
     {
         $user = User::factory()->create();
