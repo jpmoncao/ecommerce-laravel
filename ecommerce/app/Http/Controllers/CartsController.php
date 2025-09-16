@@ -25,6 +25,6 @@ class CartsController extends Controller
         return response()->json([
             'message' => 'Cart listed successfully!',
             'data' => $cart
-        ], 201);
+        ], 200);
     }
 }
