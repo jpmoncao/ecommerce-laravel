@@ -1,0 +1,7 @@
+# baseURL
+@baseURL = http://localhost:8000/api
+@userId = 270e30d2-baaa-4263-9bd8-be8d69c0d9db
+
+###
+# Find Cart By User Id
+GET {{ baseURL }}/carts/{{ userId }}
