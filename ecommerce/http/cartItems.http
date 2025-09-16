@@ -1,0 +1,18 @@
+# baseURL
+@baseURL = http://localhost:8000/api
+@cartItemId = 270e30d2-baaa-4263-9bd8-be8d69c0d9db
+
+###
+# Add item in cart
+POST {{ baseURL }}/cart-items/
+Content-Type: 'application/application/json'
+
+{    
+    "product_variation_id": "2989552c-6b95-4d6b-ad94-ef3a72e046f3",
+    "quantity" : 1
+}
+
+
+###
+# Remove item from cart
+DELETE {{ baseURL }}/cart-items/{{ cartItemId }}
