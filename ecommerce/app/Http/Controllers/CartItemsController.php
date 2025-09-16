@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 
 class CartItemsController extends Controller
 {
-   
+
     /**
      * Store a newly created resource in storage.
      */
@@ -37,6 +37,7 @@ class CartItemsController extends Controller
 
         // Obtém a variação do produto pelo id passado
         $product_variation = ProductVariations::find($request->product_variation_id);
+
         // Caso não encontre, dispara mensagem de não encontrado
         if (!$product_variation)
             return response()->json(['message' => 'Product variation not found!'], 404);
@@ -47,6 +48,7 @@ class CartItemsController extends Controller
             ->sum('quantity');
 
         // Obtém o estoque do produto    
+        $product_variation->stock();
         $product_stock = $product_variation->stock;
 
         // Se a quantidade em estoque for menor do que a demanda (quantidade no carrinho + quantidade da requisição)
@@ -96,7 +98,7 @@ class CartItemsController extends Controller
             'data' => $cart,
         ], 201);
     }
-    
+
     /**
      * Remove the specified resource from storage.
      */
@@ -123,5 +125,4 @@ class CartItemsController extends Controller
         // Retorna mensagem de sucesso
         return response()->json(['message' => 'Product removed from the cart successfully!'], 200);
     }
-
 }
