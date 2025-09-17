@@ -73,7 +73,7 @@ class ProductsController extends Controller
     public function variations(int $product_id)
     {
         // Obtém o produto pelo id dele
-        $product = Products::with('variants')->find($product_id);
+        $product = Products::with(['variants.stock'])->find($product_id);
 
         // Caso não encontre, dispara mensagem de não encontrado
         if (!$product)

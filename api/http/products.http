@@ -1,6 +1,6 @@
 # baseURL
 @baseURL = http://localhost:8000/api
-@productId = 1
+@productId = 2
 
 ###
 # Find All Products
