@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Link2 } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+
 import { IProduct } from "@/interfaces/products";
 
 export default function ProductsPageClient({ productsData }: { productsData: IProduct[] }) {
@@ -25,10 +27,10 @@ export default function ProductsPageClient({ productsData }: { productsData: IPr
 
 function ProductItem(data: IProduct) {
     return (
-        <div className="w-full px-2 py-4 border rounded flex flex-col gap-1">
+        <Link href={"/product/" + data.id_product} className="w-full p-4 border rounded-md flex flex-col gap-1 min-h-32 active:bg-foreground/5">
             <h1 className="text-lg font-bold">{data.name}</h1>
             <p>{data.description ? 'Descrição:' : ''} <span className="text-primary/70">{data.description}</span></p>
-            <Link href={"/product/" + data.id_product} className="bg-primary text-primary-foreground rounded px-2 py-1 flex w-fit gap-2 hover:bg-primary/90 mt-2"><Link2 /> Ver Produto</Link>
-        </div>
+            <Button className="mt-auto w-fit"><Link2 /> Ver Produto</Button>
+        </Link>
     )
 }

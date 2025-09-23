@@ -7,11 +7,12 @@ import { AlertCircle, ArrowLeft, PlusCircle, ShoppingCart } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
 
 import { IProduct } from "@/interfaces/products"
 import { IProductVariation } from "@/interfaces/product-variations"
 import { IProductStock } from "@/interfaces/product-stocks"
-import { Button } from "@/components/ui/button"
+
 import { cn } from "@/lib/utils"
 
 interface IProductData extends IProduct {
@@ -46,7 +47,11 @@ export default function ProductPageClient({ productData }: { productData: IProdu
 
     return (
         <div className="flex flex-col pl-6 pr-4 py-6 mx-auto w-full max-w-[800px] space-y-8">
-            <Link href={"/products"} className="bg-primary text-primary-foreground rounded px-2 py-1 flex w-fit gap-2 hover:bg-primary/90 mt-2"><ArrowLeft /> Voltar</Link>
+            <Link href={"/products"}>
+                <Button>
+                    <ArrowLeft /> Voltar
+                </Button>
+            </Link>
 
             <div className="flex flex-col gap-2">
                 <h1 className="text-2xl font-bold">{product.name}</h1>
@@ -112,6 +117,6 @@ export default function ProductPageClient({ productData }: { productData: IProdu
                     <Button disabled={variant.stock.quantity == 0}><ShoppingCart /> Adicionar ao carrinho</Button>
                 </div>
             </section>
-        </div>
+        </div >
     )
 }
