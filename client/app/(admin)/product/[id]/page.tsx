@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import ProductPageClient from "./csr";
 
 async function fetchProduct(id: number) {
-    const res = await fetch(`http://localhost:8000/api/products/${id}/variations`, {
+    const res = await fetch(`${process.env.API_URL}/api/products/${id}/variations`, {
         cache: "no-store",
     });
 

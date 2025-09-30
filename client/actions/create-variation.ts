@@ -11,7 +11,7 @@ export const serverAction = actionClient
   .action(async ({ parsedInput }) => {
     console.log(parsedInput)
 
-    const res = await fetch("http://localhost:8000/api/variations", {
+    const res = await fetch(process.env.API_URL + "/api/variations", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(parsedInput),

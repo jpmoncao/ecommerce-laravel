@@ -1,12 +1,9 @@
-import Link from "next/link";
-import { Link2 } from "lucide-react";
-
 import { CreateProductVariationForm } from "./form";
 
 import { IProduct } from "@/interfaces/products";
 
 const fetchProducts = async () => {
-    return await fetch('http://localhost:8000/api/products')
+    return await fetch(process.env.API_URL + '/api/products')
         .then(response => response.ok ? response.json() : null)
         .then(json => json.data)
         .catch(err => console.error(err));

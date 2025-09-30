@@ -6,10 +6,10 @@ import { productSchema, productResponseSchema } from "@/schemas/create-product";
 const actionClient = createSafeActionClient();
 
 export const serverAction = actionClient
-  .inputSchema(productSchema)   
+  .inputSchema(productSchema)
   .outputSchema(productResponseSchema)
   .action(async ({ parsedInput }) => {
-    const res = await fetch("http://localhost:8000/api/products", {
+    const res = await fetch(process.env.API_URL + "/api/products", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(parsedInput),
