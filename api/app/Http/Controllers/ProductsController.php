@@ -81,8 +81,20 @@ class ProductsController extends Controller
 
         // Retorna produto com mensagem de sucesso
         return response()->json([
-            'message' => 'Products with variations listed successfully!',
+            'message' => 'Product with variations listed successfully!',
             'data' => $product,
+        ], 200);
+    }
+
+    public function productsWithVariations() 
+    {
+        // Obtém produtos com variações
+        $products = Products::with(['variants.stock'])->get();
+
+        // Retorna produtos com mensagem de sucesso
+        return response()->json([
+            'message' => 'Products with variations listed successfully!',
+            'data' => $products,
         ], 200);
     }
 }

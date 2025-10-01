@@ -58,9 +58,23 @@ class ProductsTest extends TestCase
 
         $response
             ->assertStatus(200)
-            ->assertJson(['message' => 'Products with variations listed successfully!'])
+            ->assertJson(['message' => 'Product with variations listed successfully!'])
             ->assertJsonCount(1, 'data.variants')
             ->assertJsonPath('data.variants.0.product_id', self::VALID_PRODUCT_ID);
+    }
+
+    public function test_should_list_all_products_with_variations_and_stock(): void
+    {
+        Products::factory()->create(['id_product' => self::VALID_PRODUCT_ID]);
+        ProductVariations::factory()->create(['product_id' => self::VALID_PRODUCT_ID]);
+
+        $response = $this->get("/api/products/variations");
+
+        $response
+            ->assertStatus(200)
+            ->assertJson(['message' => 'Products with variations listed successfully!'])
+            ->assertJsonCount(1, 'data.0.variants')
+            ->assertJsonPath('data.0.variants.0.product_id', self::VALID_PRODUCT_ID);
     }
 
     public function test_should_create_product(): void

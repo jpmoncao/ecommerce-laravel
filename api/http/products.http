@@ -23,3 +23,7 @@ GET {{ baseURL }}/products/{{ productId }}
 ###
 # Find Product Variations by Product Id
 GET {{ baseURL }}/products/{{ productId }}/variations
+
+###
+# Find All Products With Variations
+GET {{ baseURL }}/products/variations

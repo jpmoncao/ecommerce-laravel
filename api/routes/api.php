@@ -16,16 +16,17 @@ use Illuminate\Support\Facades\Route;
  * GERENCIAMENTO DE ESTOQUE
  */
 
-// Recursos
-Route::resource('/products', ProductsController::class);
-Route::resource('/variations', ProductVariationsController::class);
-Route::resource('/entries/stock', ProductStockEntriesController::class);
-
 // Relacionamentos
+Route::get('/products/variations', [ProductsController::class, 'productsWithVariations']);
 Route::get('/products/{product_id}/variations', [ProductsController::class, 'variations']);
 Route::get('/variations/{variation_id}/product', [ProductVariationsController::class, 'product']);
 Route::get('/variations/{variation_id}/stock', [ProductVariationsController::class, 'stock']);
 Route::get('/variations/{variation_id}/entries/stock', [ProductVariationsController::class, 'stockEntries']);
+
+// Recursos
+Route::resource('/products', ProductsController::class);
+Route::resource('/variations', ProductVariationsController::class);
+Route::resource('/entries/stock', ProductStockEntriesController::class);
 
 /**
  * GERENCIAMENTO DE COMPRA
