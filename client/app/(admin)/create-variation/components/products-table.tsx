@@ -31,7 +31,7 @@ export const columns: ColumnDef<IProduct>[] = [
                     className="has-[>svg]:pr-0 text-right"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    # <ArrowUpDown />
+                    # <ArrowUpDown size={6} />
                 </Button>
             );
         },
@@ -46,7 +46,7 @@ export const columns: ColumnDef<IProduct>[] = [
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Nome <ArrowUpDown />
+                    Nome <ArrowUpDown size={6} />
                 </Button>
             );
         },
