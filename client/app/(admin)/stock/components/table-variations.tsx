@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ArrowLeft, ArrowRight, ArrowUpDown, CheckIcon, MoreHorizontal } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpDown, MoreHorizontal, SortAsc, SortDesc } from "lucide-react";
 import { ColumnDef, ColumnFiltersState, SortingState, VisibilityState, PaginationState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable, RowSelectionState } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -51,7 +51,7 @@ export const columns: ColumnDef<IProductVariationWithStock>[] = [
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Variação <ArrowUpDown />
+                    Variação {column.getIsSorted() ? (column.getIsSorted() === "asc" ? <SortAsc /> : <SortDesc />) : <ArrowUpDown />}
                 </Button>
             );
         },
@@ -66,27 +66,27 @@ export const columns: ColumnDef<IProductVariationWithStock>[] = [
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Preço (R$) <ArrowUpDown />
+                    Preço (R$) {column.getIsSorted() ? (column.getIsSorted() === "asc" ? <SortAsc /> : <SortDesc />) : <ArrowUpDown />}
                 </Button>
             );
         },
         cell: ({ row }) => <div>{(row.getValue("amount") as number)?.toLocaleString("pt-br", { minimumFractionDigits: 2 })}</div>
     },
     {
-        accessorKey: "stock",
-        header: ({ column }) => {
-            return (
-                <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Qtde Estoque <ArrowUpDown />
-                </Button>
-            );
-        },
-        cell: ({ row }) => <div>{(row.getValue("stock") as IProductStock)?.quantity}</div>
-    },
+        accessorFn: (row) => row.stock.quantity,
+        id: "stockQuantity",
+        header: ({ column }) => (
+            <Button
+                type="button"
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc", true)}
+            >
+                Qtde Estoque {column.getIsSorted() ? (column.getIsSorted() === "asc" ? <SortAsc /> : <SortDesc />) : <ArrowUpDown />}
+            </Button>
+        ),
+        cell: ({ row }) => <div>{row.getValue("stockQuantity")}</div>,
+        sortingFn: "basic",
+    }
 ];
 
 export default function TableVariations({ data, onRowClick, onActionClick }: Props) {
