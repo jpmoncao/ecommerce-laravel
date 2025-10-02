@@ -9,6 +9,7 @@ import { Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { IProduct } from "@/interfaces/products";
+import { MagicBackButton } from "@/components/ui/magic-back-button";
 
 export default function ProductsPageClient({ productsData }: { productsData: IProduct[] }) {
     const searchParams = useSearchParams();
@@ -19,8 +20,13 @@ export default function ProductsPageClient({ productsData }: { productsData: IPr
     }, [message]);
 
     return (
-        <div className="flex flex-col pl-6 pr-4 py-6 mx-auto w-full max-w-[800px] space-y-4">
-            {productsData.map((product, index) => <div key={index}>{ProductItem(product)}</div>)}
+        <div className="flex flex-col pl-6 pr-4 py-6 mx-auto w-full max-w-[1200px] space-y-4">
+            <MagicBackButton />
+
+            <h1 className="text-2xl font-bold mb-4">Produtos</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {productsData.map((product, index) => <div key={index}>{ProductItem(product)}</div>)}
+            </div>
         </div>
     )
 }

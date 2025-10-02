@@ -1,6 +1,8 @@
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { PageTracker } from "react-page-tracker";
 
 import { Toaster } from "@/components/ui/sonner"
 
@@ -29,6 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <PageTracker />
         <Toaster position="top-center" richColors closeButton />
         {children}
       </body>

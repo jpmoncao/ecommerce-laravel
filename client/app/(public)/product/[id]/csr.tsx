@@ -14,6 +14,7 @@ import { IProductVariation } from "@/interfaces/product-variations"
 import { IProductStock } from "@/interfaces/product-stocks"
 
 import { cn } from "@/lib/utils"
+import { MagicBackButton } from "@/components/ui/magic-back-button"
 
 interface IProductData extends IProduct {
     variants: (IProductVariation & { stock: IProductStock })[];
@@ -36,8 +37,7 @@ export default function ProductPageClient({ productData }: { productData: IProdu
                     <AlertTitle className="flex gap-2 items-center"><AlertCircle /> O produto "{productData.id_product} - {productData.name}" está indisponível!</AlertTitle>
                     <AlertDescription>Contate o administrador para verificar a disponibildade do produto...</AlertDescription>
                     <div className="flex gap-4 mt-4">
-                        <Link href={'/products'}>
-                            <Button variant="outline"><ArrowLeft /> Voltar</Button></Link>
+                        <MagicBackButton />
                         <Link href={'/create-variation?product_id=' + productData.id_product}><Button variant="destructive"><PlusCircle /> Cadastrar Variações</Button></Link>
                     </div>
                 </Alert>
@@ -46,11 +46,7 @@ export default function ProductPageClient({ productData }: { productData: IProdu
 
     return (
         <div className="flex flex-col pl-6 pr-4 py-6 mx-auto w-full max-w-[800px] space-y-8">
-            <Link href={"/products"}>
-                <Button>
-                    <ArrowLeft /> Voltar
-                </Button>
-            </Link>
+            <MagicBackButton />
 
             <div className="flex flex-col gap-2">
                 <h1 className="text-2xl font-bold">{productData.name}</h1>
