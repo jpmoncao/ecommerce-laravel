@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useSearchParams, useRouter } from "next/navigation"
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,10 +27,12 @@ export default function StockEntriesPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const variations = searchParams.get("variations") ? JSON.parse(searchParams.get("variations")!) as VariationsToStockEntry[] : [];
+    const variationsWithZeroStock = variations.map(v => ({ ...v, stock: { ...v.stock, quantity: 0 } }));
 
+    const [showFooter, setShowFooter] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [postSuccess, setPostSuccess] = useState(false);
-    const [variationList, setVariationList] = useState<VariationsToStockEntry[]>(variations);
+    const [variationList, setVariationList] = useState<VariationsToStockEntry[]>(variationsWithZeroStock);
 
     const handlePostStockEntries = async () => {
         const payload = variationList
@@ -61,6 +63,10 @@ export default function StockEntriesPage() {
         }
     };
 
+    useEffect(() => {
+        const hasStockEntries = variationList.some(v => v.stock.quantity > 0);
+        setShowFooter(hasStockEntries);
+    }, [variationList]);
 
     function handleQuantityIncrementDecrement(index: number, delta: number) {
         setVariationList(prev => {
@@ -88,6 +94,31 @@ export default function StockEntriesPage() {
             };
             return newList;
         });
+    }
+
+    function handleQuantityChangeAll(value: number) {
+        setVariationList(prev => prev.map(v => ({
+            ...v,
+            stock: { ...v.stock, quantity: value }
+        })));
+    }
+
+    function handleDeleteStockEntries() {
+        setShowFooter(false);
+        handleQuantityChangeAll(0);
+        toast.info("Lançamentos de estoque resetados.");
+    }
+
+    function ChangedStockLabel({ variation }: { variation: VariationsToStockEntry }) {
+        const existingQuantity = variations.find(v => v.id_product_variation === variation.id_product_variation)?.stock.quantity ?? 0;
+
+        return (
+            <p className="text-muted-foreground flex items-center gap-1">
+                <span>Estoque: {' ' + existingQuantity}</span>
+                <ArrowRight size={12} />
+                <span className="font-medium">{existingQuantity + variation.stock.quantity}</span>
+            </p>
+        )
     }
 
     if (postSuccess)
@@ -125,114 +156,113 @@ export default function StockEntriesPage() {
         );
 
     return (
-        <div className="flex flex-col p-6 mx-auto w-full max-w-[800px]">
-            <h1 className="text-2xl font-bold mb-4">Lançamento de Estoque</h1>
-            {variations && variations.length === 0
-                ? <p>Nenhuma variação selecionada para lançamento de estoque.</p>
-                : (<div>
-                    <div className="mb-4 flex justify-between md:items-center md:flex-row gap-y-2 flex-col">
-                        <h2 className="text-xl font-semibold mb-2">Variações Selecionadas:</h2>
+        <>
+            <div className="flex flex-col p-6 mx-auto w-full max-w-[800px]">
+                <h1 className="text-2xl font-bold mb-4">Lançamento de Estoque</h1>
+                {variations && variations.length === 0
+                    ? <p>Nenhuma variação selecionada para lançamento de estoque.</p>
+                    : (<div>
+                        <div className="mb-4 flex justify-between md:items-center md:flex-row gap-y-2 flex-col">
+                            <h2 className="text-xl font-semibold mb-2">Variações Selecionadas:</h2>
 
-                        <div className="flex flex-col">
-                            <label className="text-sm font-medium text-muted-foreground mb-1 ml-auto">Quantidade para todas:</label>
-                            <Input
-                                className="w-32 ml-auto"
-                                type="number"
-                                onChange={(e) => {
-                                    const value = Number(e.target.value);
-                                    setVariationList(prev => prev.map(v => ({
-                                        ...v,
-                                        stock: { ...v.stock, quantity: value }
-                                    })));
-                                }}
-                            />
+                            <div className="flex flex-col">
+                                <label className="text-sm font-medium text-muted-foreground mb-1 ml-auto">Quantidade para todas:</label>
+                                <Input
+                                    className="w-32 ml-auto"
+                                    type="number"
+                                    onChange={(e) => { handleQuantityChangeAll(Number(e.target.value)) }}
+                                />
+                            </div>
+
                         </div>
-
-                    </div>
-                    <ul className="list-disc list-inside flex flex-col gap-2">
-                        {variations.map((variation, index) => (
-                            <div key={index} className="p-4 border rounded-md flex gap-4 items-center justify-between md:flex-row flex-col">
-                                <div>
-                                    <p className="text-muted-foreground">#{variation.product_id}</p>
-                                    <h2 className="font-medium">{variation.variation}<span className="text-muted-foreground font-normal"> (ID: {variation.id_product_variation})</span></h2>
-                                    <p className="text-muted-foreground">Estoque atual: {variation.stock.quantity}</p>
-                                    <Input
-                                        type="text"
-                                        className="w-full mt-1"
-                                        placeholder="Observação (opcional)"
-                                        value={variationList[index].observation || ""}
-                                        onChange={(e) => {
-                                            const value = e.target.value;
-                                            setVariationList(prev => {
-                                                const newList = [...prev];
-                                                newList[index] = { ...newList[index], observation: value };
-                                                return newList;
-                                            });
-                                        }}
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <label htmlFor={`quantity-${index}`} className="block text-sm font-medium text-muted-foreground mb-1">Quantidade a adicionar:</label>
-                                    <div className="ml-auto flex items-center gap-1">
-                                        <Button variant="outline" className="mr-2" onClick={() => handleQuantityIncrementDecrement(index, -1)}>-</Button>
+                        <ul className="list-disc list-inside flex flex-col gap-2">
+                            {variations.map((variation, index) => (
+                                <div key={index} className="p-4 border rounded-md flex gap-4 items-center justify-between md:flex-row flex-col">
+                                    <div>
+                                        <p className="text-muted-foreground">#{variation.product_id}</p>
+                                        <h2 className="font-medium">{variation.variation}<span className="text-muted-foreground font-normal"> (ID: {variation.id_product_variation})</span></h2>
+                                        <p className="text-muted-foreground">Estoque atual: {variation.stock.quantity}</p>
                                         <Input
                                             type="text"
-                                            id={`quantity-${index}`}
-                                            className="w-24"
-                                            value={variationList[index].stock.quantity}
-                                            onChange={(e) => handleQuantityChange(index, isNaN(Number(e.target.value)) ? 0 : Number(e.target.value))}
+                                            className="w-full mt-1"
+                                            placeholder="Observação (opcional)"
+                                            value={variationList[index].observation || ""}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setVariationList(prev => {
+                                                    const newList = [...prev];
+                                                    newList[index] = { ...newList[index], observation: value };
+                                                    return newList;
+                                                });
+                                            }}
                                         />
-                                        <Button variant="outline" className="ml-2" onClick={() => handleQuantityIncrementDecrement(index, 1)}>+</Button>
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <label htmlFor={`quantity-${index}`} className="block text-sm font-medium text-muted-foreground mb-1">Quantidade a adicionar:</label>
+                                        <div className="ml-auto flex items-center gap-1">
+                                            <Button variant="outline" className="mr-2" onClick={() => handleQuantityIncrementDecrement(index, -1)}>-</Button>
+                                            <Input
+                                                type="text"
+                                                id={`quantity-${index}`}
+                                                className="w-24"
+                                                value={variationList[index].stock.quantity}
+                                                onChange={(e) => handleQuantityChange(index, isNaN(Number(e.target.value)) ? 0 : Number(e.target.value))}
+                                            />
+                                            <Button variant="outline" className="ml-2" onClick={() => handleQuantityIncrementDecrement(index, 1)}>+</Button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </ul>
+                            ))}
+                        </ul>
+                    </div>)
+                }
 
-                    <div className="mt-6 w-full">
-                        <Button className="py-6 ml-auto text-lg flex items-center" onClick={() => setDrawerOpen(true)}>Confirmar Lançamento</Button>
-                    </div>
-                </div>)
-            }
+                <DrawerDialog
+                    title="Lançamentos de estoque"
+                    description='Produtos com quantidade igual a zero não serão lançados no estoque.'
+                    open={drawerOpen}
+                    setOpen={setDrawerOpen}
+                    onSubmit={handlePostStockEntries}
+                >
+                    <div className="grid items-start gap-6 overflow-y-auto px-4 pb-4">
+                        {variationList.length === 0 ? <p>Nenhuma variação selecionada.</p> : (
+                            variationList.map((variation, index) => (
+                                <div key={index} className="p-4 border rounded-md">
+                                    <div className="flex justify-between items-end">
+                                        <p className="font-medium text-muted-foreground">#{variation.product_id}</p>
 
-            <DrawerDialog
-                title="Lançamentos de estoque"
-                description='Produtos com quantidade igual a zero não serão lançados no estoque.'
-                open={drawerOpen}
-                setOpen={setDrawerOpen}
-                onSubmit={handlePostStockEntries}
-            >
-                <div className="grid items-start gap-6 overflow-y-auto px-4 pb-4">
-                    {variationList.length === 0 ? <p>Nenhuma variação selecionada.</p> : (
-                        variationList.map((variation, index) => (
-                            <div key={index} className="p-4 border rounded-md">
-                                <div className="flex justify-between items-end">
-                                    <p className="font-medium text-muted-foreground">#{variation.product_id}</p>
-
-                                    {variation.stock.quantity === 0 && <Badge variant="destructive">Desconsiderado</Badge>}
+                                        {variation.stock.quantity === 0 && <Badge variant="destructive">Desconsiderado</Badge>}
+                                    </div>
+                                    <h2 className={cn("font-medium", variation.stock.quantity === 0 && "line-through text-muted-foreground")}>{variation.variation}</h2>
+                                    {variation.stock.quantity > 0 && <ChangedStockLabel variation={variation} />}
+                                    {variation.observation && (
+                                        <>
+                                            <Separator className="my-2" />
+                                            <p className="italic text-sm text-muted-foreground">Obs: {variation.observation}</p>
+                                        </>
+                                    )}
                                 </div>
-                                <h2 className={cn("font-medium", variation.stock.quantity === 0 && "line-through text-muted-foreground")}>{variation.variation}</h2>
-                                {variation.stock.quantity > 0
-                                    ? (
-                                        <p className="text-muted-foreground flex items-center gap-1">
-                                            Estoque: {variations.find(v => v.id_product_variation === variation.id_product_variation)?.stock.quantity && ''}
-                                            <ArrowRight size={12} />
-                                            <span className="font-medium">{variation.stock.quantity}</span>
-                                        </p>
-                                    )
-                                    : ''
-                                }
+                            )))}
+                    </div>
+                </DrawerDialog>
+            </div>
 
-                                {variation.observation && (
-                                    <>
-                                        <Separator className="my-2" />
-                                        <p className="italic text-sm text-muted-foreground">Obs: {variation.observation}</p>
-                                    </>
-                                )}
-                            </div>
-                        )))}
-                </div>
-            </DrawerDialog>
-        </div >
+            <div className={cn("w-full", showFooter && "h-16")}></div>
+
+            <AnimatePresence>
+                {showFooter &&
+                    <motion.div
+                        initial={{ y: 100 }}
+                        animate={{ y: 0 }}
+                        exit={{ y: 100 }}
+                        transition={{ type: "tween", stiffness: 200 }}
+                        className={cn("fixed flex items-center gap-2 shadow-[0_-4px_8px_rgba(0,0,0,0.1)] bg-background h-14 mt-6 w-full bottom-0 left-0 border-t p-2 ")}
+                    >
+                        <Button variant="outline" className="ml-auto" onClick={handleDeleteStockEntries}><Trash2 /></Button>
+                        <Button className="flex items-center" onClick={() => setDrawerOpen(true)}>Confirmar Lançamento</Button>
+                    </motion.div>
+                }
+            </AnimatePresence>
+        </>
     )
 }
