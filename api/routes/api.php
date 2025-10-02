@@ -28,6 +28,9 @@ Route::resource('/products', ProductsController::class);
 Route::resource('/variations', ProductVariationsController::class);
 Route::resource('/entries/stock', ProductStockEntriesController::class);
 
+Route::post('/entries/stock/batch', [ProductStockEntriesController::class, 'storeMultiple']);
+
+
 /**
  * GERENCIAMENTO DE COMPRA
  */

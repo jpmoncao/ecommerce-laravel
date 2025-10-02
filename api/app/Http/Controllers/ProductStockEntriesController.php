@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Utils\ValidatorRequest;
+use Illuminate\Support\Str;
 
 class ProductStockEntriesController extends Controller
 {
@@ -96,5 +97,49 @@ class ProductStockEntriesController extends Controller
             'message' => 'Product stock entry listed successfully!',
             'data' => $product_stock_entry,
         ], 200);
+    }
+
+    public function storeMultiple(Request $request)
+    {
+        $variations = $request->input('variations');
+
+        if (!is_array($variations) || empty($variations))
+            return response()->json(['message' => 'No variations provided'], 422);
+
+        foreach ($variations as $v)
+            if (!isset($v['product_variation_id'], $v['quantity']))
+                return response()->json(['message' => 'Invalid variation data'], 422);
+
+        DB::beginTransaction();
+        try {
+            $entries = array_map(fn($v) => [
+                'id_product_stock_entry' => (string) Str::uuid(),
+                'product_variation_id' => $v['product_variation_id'],
+                'quantity' => $v['quantity'],
+                'observation' => $v['observation'] ?? null,
+            ], $variations);
+
+            ProductStockEntries::insert($entries);
+
+            $ids = array_column($variations, 'product_variation_id');
+            $quantities = collect($variations)->keyBy('product_variation_id')->map(fn($v) => $v['quantity']);
+
+            $cases = [];
+            foreach ($quantities as $id => $qty)
+                $cases[] = "WHEN '{$id}' THEN quantity + {$qty}";
+
+            $cases_sql = implode(" ", $cases);
+            $ids_sql = implode(',', array_map(fn($id) => "'$id'", $ids));
+
+            DB::update("UPDATE product_stocks SET quantity = CASE id_stock {$cases_sql} END WHERE id_stock IN ({$ids_sql})");
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Stock entries created successfully!',
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 }
