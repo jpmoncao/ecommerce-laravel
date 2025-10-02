@@ -33,6 +33,7 @@ export default function RootLayout({
       >
         <PageTracker />
         <Toaster position="top-center" richColors closeButton />
+
         {children}
       </body>
     </html>

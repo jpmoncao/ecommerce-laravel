@@ -157,7 +157,7 @@ export default function StockEntriesPage() {
 
     return (
         <>
-            <div className="flex flex-col p-6 mx-auto w-full max-w-[800px]">
+            <div className="flex flex-col w-full">
                 <h1 className="text-2xl font-bold mb-4">Lançamento de Estoque</h1>
                 {variations && variations.length === 0
                     ? <p>Nenhuma variação selecionada para lançamento de estoque.</p>

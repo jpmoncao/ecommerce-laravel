@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Link2 } from "lucide-react";
+import { Link2, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -21,7 +21,15 @@ export default function ProductsPageClient({ productsData }: { productsData: IPr
 
     return (
         <div className="flex flex-col pl-6 pr-4 py-6 mx-auto w-full max-w-[1200px] space-y-4">
-            <MagicBackButton />
+            <div className="flex gap-2">
+                <MagicBackButton className="mr-auto" />
+                <Link href='/create-product'>
+                    <Button><Plus /> Produtos</Button>
+                </Link>
+                <Link href='/create-variation'>
+                    <Button><Plus /> Variações</Button>
+                </Link>
+            </div>
 
             <h1 className="text-2xl font-bold mb-4">Produtos</h1>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

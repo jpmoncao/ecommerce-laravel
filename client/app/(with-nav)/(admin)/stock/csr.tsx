@@ -81,7 +81,7 @@ export default function StockPageClient({ productsData }: { productsData: IProdu
     }
 
     return (
-        <div className="flex flex-col p-6 mx-auto w-full max-w-[800px]">
+        <div className="flex flex-col w-full">
             <header className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold mb-4">Estoque</h1>
                 <Button
