@@ -10,7 +10,7 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-use App\Http\Middleware\CheckTemporaryUser;
+//use App\Http\Middleware\CheckTemporaryUser;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(append: [
-            CheckTemporaryUser::class,
+            //CheckTemporaryUser::class,
             StartSession::class,
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
