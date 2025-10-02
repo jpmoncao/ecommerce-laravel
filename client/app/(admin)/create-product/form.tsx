@@ -28,7 +28,7 @@ export function CreateProductForm() {
         serverAction,
         {
             onSuccess: (data) => {
-                setIdProduct(data.data.data.id_product);
+                setIdProduct(data.data.id_product);
                 form.reset();
             },
             onError: (error) => {
@@ -73,7 +73,7 @@ export function CreateProductForm() {
                         Clique aqui para cadastrar as variações do produto
                     </p>
                     {idProduct && (
-                        <Link href={`/create-variation?product_id=${idProduct}`}>
+                        <Link href={`/create-variation?product_id=${idProduct}`} className="flex justify-center mt-6">
                             <Button>
                                 <PlusCircle /> Cadastrar Variações
                             </Button>

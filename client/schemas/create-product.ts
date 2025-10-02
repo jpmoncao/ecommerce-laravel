@@ -8,13 +8,11 @@ export const productSchema = z.object({
 export type ProductSchema = z.infer<typeof productSchema>;
 
 export const productResponseSchema = z.object({
-    data: z.object({
-        id_product: z.number(),
-        name: z.string(),
-        description: z.string(),
-        updated_at: z.string(),
-        created_at: z.string()
-    })
+    id_product: z.number(),
+    name: z.string(),
+    description: z.string().nullable().optional(),
+    updated_at: z.string(),
+    created_at: z.string()
 });
 
 export type ProductResponse = z.infer<typeof productResponseSchema>;
