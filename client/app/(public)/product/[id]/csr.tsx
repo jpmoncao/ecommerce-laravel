@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { AlertCircle, ArrowLeft, PlusCircle, ShoppingCart } from "lucide-react"
+import { AlertCircle, ArrowLeft, Package2, PlusCircle, ShoppingCart } from "lucide-react"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -20,26 +20,25 @@ interface IProductData extends IProduct {
 }
 
 export default function ProductPageClient({ productData }: { productData: IProductData }) {
-    const [product] = useState<IProductData>(productData)
-    const [variant, setVariant] = useState(product.variants.find(variantion => variantion.stock.quantity) ?? product.variants[0])
+    const [variant, setVariant] = useState(productData.variants.find(variantion => variantion.stock.quantity) ?? productData.variants[0])
     const [imgLoaded, setImgLoaded] = useState(false);
 
     const handleChangeVariant = async (value: string) => {
-        const selected = product.variants.find(v => v.id_product_variation.toString() === value)
+        const selected = productData.variants.find(v => v.id_product_variation.toString() === value)
         if (!selected) return
         setVariant(selected)
     }
 
-    if (product.variants.length === 0)
+    if (productData.variants.length === 0)
         return (
             <div className="flex flex-col items-center h-dvh w-full">
                 <Alert className="max-w-[800px] w-full mt-20 space-y-2 px-4 py-6" variant='destructive'>
-                    <AlertTitle className="flex gap-2 items-center"><AlertCircle /> O produto "{product.id_product} - {product.name}" está indisponível!</AlertTitle>
+                    <AlertTitle className="flex gap-2 items-center"><AlertCircle /> O produto "{productData.id_product} - {productData.name}" está indisponível!</AlertTitle>
                     <AlertDescription>Contate o administrador para verificar a disponibildade do produto...</AlertDescription>
                     <div className="flex gap-4 mt-4">
                         <Link href={'/products'}>
                             <Button variant="outline"><ArrowLeft /> Voltar</Button></Link>
-                        <Link href={'/create-variation?product_id=' + product.id_product}><Button variant="destructive"><PlusCircle /> Cadastrar Variações</Button></Link>
+                        <Link href={'/create-variation?product_id=' + productData.id_product}><Button variant="destructive"><PlusCircle /> Cadastrar Variações</Button></Link>
                     </div>
                 </Alert>
             </div>
@@ -54,8 +53,8 @@ export default function ProductPageClient({ productData }: { productData: IProdu
             </Link>
 
             <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-bold">{product.name}</h1>
-                <p className="text-primary/80">{product.description}</p>
+                <h1 className="text-2xl font-bold">{productData.name}</h1>
+                <p className="text-primary/80">{productData.description}</p>
             </div>
 
             <section className="flex justify-between gap-8 w-full">
@@ -80,7 +79,7 @@ export default function ProductPageClient({ productData }: { productData: IProdu
                                 <SelectValue placeholder="Selecione uma variação" />
                             </SelectTrigger>
                             <SelectContent>
-                                {product.variants.map((v) => (
+                                {productData.variants.map((v) => (
                                     <SelectItem key={v.id_product_variation} value={v.id_product_variation.toString()} className={cn(v.stock.quantity == 0 ? 'text-foreground/50' : '')}>
                                         {v.variation}
                                     </SelectItem>
@@ -114,7 +113,12 @@ export default function ProductPageClient({ productData }: { productData: IProdu
                         }
                     </div>
 
-                    <Button disabled={variant.stock.quantity == 0}><ShoppingCart /> Adicionar ao carrinho</Button>
+                    <div className="flex flex-col gap-2">
+                        <Button disabled={variant.stock.quantity == 0}><ShoppingCart /> Adicionar ao carrinho</Button>
+                        <Link href={`/stock/entries?variations=${encodeURIComponent(JSON.stringify(productData.variants))}`}>
+                            <Button className="w-full" variant='outline'><Package2 /> Lançar estoque</Button>
+                        </Link>
+                    </div>
                 </div>
             </section>
         </div >
