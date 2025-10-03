@@ -46,9 +46,11 @@ Route::get('/me', function (Request $request) {
     ]);
 })->middleware('auth:sanctum');
 
+Route::post('/users', [UsersController::class, 'store']);
+
 Route::middleware('auth:sanctum')->group(function () {
     // Recursos
-    Route::resource('/users', UsersController::class);
+    Route::resource('/users', UsersController::class)->only(['show']);
     Route::resource('/carts', CartsController::class);
     Route::resource('/cart-items', CartItemsController::class);
 

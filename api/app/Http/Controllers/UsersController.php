@@ -45,7 +45,7 @@ class UsersController extends Controller
 
         $user = $request->user();
 
-        if ($user->is_guest)
+        if ($user && $user->is_guest)
             // Atualiza visitante para virar usuário real
             $user->update([
                 'is_guest' => false,
