@@ -26,7 +26,7 @@ const Navbar = () => {
         <div className="flex items-center gap-3">
           {!loading
             ?
-            !isValid && (
+            !isValid ? (
               <>
                 <Link href="/login" className="text-sm font-medium">
                   <Button variant="outline" className="hidden sm:inline-flex">Login</Button>
@@ -35,6 +35,10 @@ const Navbar = () => {
                   <Button>Faça uma conta</Button>
                 </Link>
               </>
+            ) : (
+              <Link href="/logout" className="text-sm font-medium">
+                <Button variant="outline" className="hidden sm:inline-flex">Sair</Button>
+              </Link>
             )
             : <Loader2 className="animate-spin text-foreground/30" />}
 
