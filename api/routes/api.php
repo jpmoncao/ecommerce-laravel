@@ -9,8 +9,7 @@ use App\Http\Controllers\ProductVariationsController;
 use App\Http\Controllers\ProductStockEntriesController;
 use App\Http\Controllers\UsersController;
 
-use App\Http\Middleware\CheckTemporaryUser;
-
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -36,18 +35,26 @@ Route::post('/entries/stock/batch', [ProductStockEntriesController::class, 'stor
  * GERENCIAMENTO DE COMPRA
  */
 
-// Recursos
 Route::post('/guest', [AuthController::class, 'guest']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/me', function (Request $request) {
+    return response()->json([
+        'data' => [
+            'id_user' => $request->user()->id_user,
+            'token_expires_at' => $request->user()->currentAccessToken()->expires_at,
+        ]
+    ]);
+})->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
+    // Recursos
     Route::resource('/users', UsersController::class);
     Route::resource('/carts', CartsController::class);
     Route::resource('/cart-items', CartItemsController::class);
-});
 
-// Relacionamentos
-Route::get('/users/{user_id}/cart-items', [UsersController::class, 'cartItems']);
+    // Relacionamentos
+    Route::get('/users/{user_id}/cart-items', [UsersController::class, 'cartItems']);
+});
 
 
 /**
