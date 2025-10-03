@@ -21,7 +21,6 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(append: [
-            //CheckTemporaryUser::class,
             StartSession::class,
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
