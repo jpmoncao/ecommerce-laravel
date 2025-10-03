@@ -1,6 +1,7 @@
 # baseURL
-@baseURL = http://localhost:8000/api
-@userId = 270e30d2-baaa-4263-9bd8-be8d69c0d9db
+@baseURL = http://localhost:8001/api
+@userId = {userId}
+@token = 5|D2OrKnzf1g0549UBkzil4sBahgvc7NP4Lfn3wCxy646443f5
 
 ###
 # Login User
@@ -13,8 +14,14 @@ Content-Type: application/json
 }
 
 ###
+# Create Guest User
+POST {{ baseURL }}/guest
+Content-Type: application/json
+
+###
 # Create User
 POST {{ baseURL }}/users
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {

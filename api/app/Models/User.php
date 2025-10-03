@@ -6,12 +6,15 @@ use App\Models\Carts;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @method \Laravel\Sanctum\NewAccessToken createToken(string $name, array $abilities = ['*'], \DateTimeInterface|null $expiresAt = null)
+ */
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $primaryKey = 'id_user';
     public $incrementing = false;
@@ -26,6 +29,7 @@ class User extends Authenticatable
         'address',
         'born_date',
         'email_verified_at',
+        'is_guest'
     ];
 
     protected $hidden = [
@@ -65,4 +69,3 @@ class User extends Authenticatable
         return $this->password;
     }
 }
-

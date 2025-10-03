@@ -8,8 +8,6 @@ use App\Models\Carts;
 use App\Rules\StrongPassword;
 
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
@@ -34,11 +32,6 @@ class UsersController extends Controller
         if ($error)
             return $error;
 
-        // Verifica permissão (Gate) para "access-user"
-        if (!Gate::allows('access-user', $request->user()->id_user))
-            // Se não houver permissão, retorna uma mensagem de inautorizado
-            return response()->json(['message' => 'User not authorized!'], 403);
-
         // Cria objeto com atributos do usuário
         $attributes = [
             'name' => $request->name,
@@ -46,19 +39,30 @@ class UsersController extends Controller
             'address' => $request->address,
             'cpf_cnpj' => $request->cpf_cnpj,
             'email' => $request->email,
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
+            'is_guest' => false
         ];
 
-        // Cria ou atualiza usuário
-        $user = User::updateOrCreate(
-            ['id_user' => $request->user()->id_user],
-            $attributes
-        );
+        $user = $request->user();
+
+        if ($user->is_guest)
+            // Atualiza visitante para virar usuário real
+            $user->update([
+                'is_guest' => false,
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+            ]);
+        else
+            $user = User::create($attributes);
+
+        // Revogar token antigo e criar um novo
+        $user->tokens()->delete();
 
         // Retorna o usuário com mensagem de sucesso
         return response()->json([
             'message' => 'User listed successfully!',
-            'data' => $user,
+            'data' => $user
         ], 201);
     }
 
@@ -84,38 +88,6 @@ class UsersController extends Controller
             'message' => 'User listed successfully!',
             'data' => $user,
         ], 200);
-    }
-
-    public function login(Request $request)
-    {
-        // Cria objeto de validação
-        $validate = new ValidatorRequest($request, [
-            'email' => 'required|string|max:255|email',
-            'password' => ['required', 'string', 'min:8', new StrongPassword],
-        ]);
-
-        // Valida se dados enviados batem com o objeto, caso não, dispara erro
-        $error = $validate->handleErrors();
-        if ($error)
-            return $error;
-
-        // Obtém usuário pelo email
-        $user = User::where('email', $request->email)->first();
-
-        // Caso não encontre, dispara mensagem de não encontrado
-        if (!$user)
-            return response()->json(['message' => 'User with this email not found!'], 404);
-
-        // Verifica se a senha está correta
-        if (!Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Password is not valid!'], 404);
-        }
-
-        // Autentica o usuário e inicia a sessão
-        Auth::login($user);
-
-        // Retorna resposta de sucesso
-        return response()->json(['message' => 'Login successful!'], 200);
     }
 
 

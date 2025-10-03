@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartsController;
 use App\Http\Controllers\CartItemsController;
 use App\Http\Controllers\OrdersController;
@@ -36,11 +37,14 @@ Route::post('/entries/stock/batch', [ProductStockEntriesController::class, 'stor
  */
 
 // Recursos
-Route::post('/login', [UsersController::class, 'login']);
+Route::post('/guest', [AuthController::class, 'guest']);
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::resource('/users', UsersController::class)->middleware(CheckTemporaryUser::class);
-Route::resource('/carts', CartsController::class)->middleware(CheckTemporaryUser::class);
-Route::resource('/cart-items', CartItemsController::class)->middleware(CheckTemporaryUser::class);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('/users', UsersController::class);
+    Route::resource('/carts', CartsController::class);
+    Route::resource('/cart-items', CartItemsController::class);
+});
 
 // Relacionamentos
 Route::get('/users/{user_id}/cart-items', [UsersController::class, 'cartItems']);
